@@ -1,2 +1,2 @@
 # python-mysql-ad
-School project
+Python script to manage Active Directory
