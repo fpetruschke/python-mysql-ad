@@ -1,6 +1,7 @@
-import tkinter as tk
 import sys
-import executeSql
+import tkinter as tk
+
+from projectModules import executeSql
 
 #Defining Font style
 LARGE_FONT = ("Helvetica", 12)
