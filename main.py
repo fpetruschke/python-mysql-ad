@@ -1,6 +1,6 @@
 import tkinter as tk
 import sys
-import mysql.connector
+import executeSql
 
 #Defining Font style
 LARGE_FONT = ("Helvetica", 12)
@@ -132,20 +132,11 @@ class PageShowAll(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        hostName = 'localhost'
-        dbName = 'pythonTest'
-        dbUser = 'python'
-        dbPassword = 'python'
-
-        # setting up the db connection and the cursor for reading data
-        db = mysql.connector.connect(host=hostName, database=dbName, user=dbUser, password=dbPassword)
-        cursor = db.cursor()
-        # query the database
-        cursor.execute(""" select * from user""", )
-        rows = cursor.fetchall()
-
+        # calling the executeSql method for showing all data
+        rows = executeSql.executeSqlShow(""" select * from user""")
+        # creating labels for each tupel
         for row in rows:
-            label = tk.Label(self, text=row, font=SMALL_FONT)
+            label = tk.Label(self, text=row, fg="red", justify="left", font=SMALL_FONT)
             label.pack()
 
         buttonBack = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
