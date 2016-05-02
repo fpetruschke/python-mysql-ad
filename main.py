@@ -1,17 +1,11 @@
 import tkinter as tk
-
 import sys
-import random
-import threading
+import mysql.connector
 
 #Defining Font style
 LARGE_FONT = ("Helvetica", 12)
 MEDIUM_FONT = ("Helvetica", 10)
 SMALL_FONT = ("Helvetica", 8)
-
-# default values for gamefield size
-rowValue = 5
-colValue = 5
 
 '''Start class'''
 # initialising class
@@ -44,11 +38,11 @@ class Start(tk.Tk):
         '''PAGES - all pages must be defined inside the F tupel !!!'''
         # dictionary for all the frames
         self.frames = {}
-        for F in (PageMainMenu, PageExecuteQuery, PageSettings, PageAbout):
+        for F in (PageMainMenu, PageExecuteQuery, PageShowAll, PageSettings, PageAbout):
             # initial page which will be run
             frame = F(container, self)
             self.frames[F] = frame
-            #assigning the frame to the grid with row and column
+            # assigning the frame to the grid with row and column
             # empty rows/columns will be ignored
             # sticky: north south east west: direction to align + stretch
             frame.grid(row=0, column=0, sticky="nsew")
@@ -82,6 +76,9 @@ class PageMainMenu(tk.Frame):
         # lambda : run command immediately
         button1 = tk.Button(self, text="Neuen Schüler anlegen", command=lambda: controller.show_frame(PageSettings))
         button1.pack()
+
+        button4 = tk.Button(self, text="Alle Schüler anzeigen", command=lambda: controller.show_frame(PageShowAll))
+        button4.pack()
 
         button2 = tk.Button(self, text="Über", command=lambda: controller.show_frame(PageAbout))
         button2.pack()
@@ -130,6 +127,29 @@ class PageSettings(tk.Frame):
 # initialisation of the button dictionary - MUST be set!
 button = [[0 for x in range(999)] for x in range(999)]
 
+'''PageShowAll class '''
+class PageShowAll(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        hostName = 'localhost'
+        dbName = 'pythonTest'
+        dbUser = 'python'
+        dbPassword = 'python'
+
+        # setting up the db connection and the cursor for reading data
+        db = mysql.connector.connect(host=hostName, database=dbName, user=dbUser, password=dbPassword)
+        cursor = db.cursor()
+        # query the database
+        cursor.execute(""" select * from user""", )
+        rows = cursor.fetchall()
+
+        for row in rows:
+            label = tk.Label(self, text=row, font=SMALL_FONT)
+            label.pack()
+
+        buttonBack = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
+        buttonBack.pack()
 
 '''PageExecuteQuery class'''
 class PageExecuteQuery(tk.Frame):
