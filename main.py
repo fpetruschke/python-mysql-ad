@@ -6,6 +6,17 @@ import config.style as style
 # contains the mysql execute methods which open and close db connections for statements
 from projectModules import executeSql
 
+# Method for centering the application window in the center of the screen
+def center(toplevel):
+    toplevel.update_idletasks()
+    w = toplevel.winfo_screenwidth()
+    h = toplevel.winfo_screenheight()
+    size = tuple(int(_) for _ in toplevel.geometry().split('+')[0].split('x'))
+    x = w/2 - size[0]/2
+    y = h/2 - size[1]/2
+    toplevel.geometry("%dx%d+%d+%d" % (size + (x, y)))
+
+
 '''Start class'''
 # initialising class
 # inherits from tk.TK class
@@ -20,11 +31,14 @@ class Start(tk.Tk):
         tk.Tk.__init__(self,*args,**kwargs)
 
         # setting the windows size
-        tk.Tk.minsize(self, width=400, height=300)
+        tk.Tk.minsize(self, width=500, height=400)
         tk.Tk.maxsize(self, width=500, height=400)
 
         # define container as a tk.Frame
         container = tk.Frame(self)
+
+        #centering the window on the screen
+        center(self)
 
         # pack: packs the element just into wherever is place for it
         # fill: fills the entire space, expand: can get bigger than initialised
@@ -73,17 +87,17 @@ class PageMainMenu(tk.Frame):
         # creating a button
         # Parameters: self, title, command/function
         # lambda : run command immediately
-        button1 = tk.Button(self, text="Neuen Schüler anlegen", command=lambda: controller.show_frame(PageSettings))
-        button1.pack()
+        button1 = tk.Button(self, text="Neuen Nutzer anlegen", width=20 ,command=lambda: controller.show_frame(PageSettings))
+        button1.pack(pady=10, padx=10)
 
-        button4 = tk.Button(self, text="Alle Schüler anzeigen", command=lambda: controller.show_frame(PageShowAll))
-        button4.pack()
+        button4 = tk.Button(self, text="Alle Nutzer anzeigen", width=20, command=lambda: controller.show_frame(PageShowAll))
+        button4.pack(pady=10, padx=10)
 
-        button2 = tk.Button(self, text="Über", command=lambda: controller.show_frame(PageAbout))
-        button2.pack()
+        button2 = tk.Button(self, text="Über", width=20, command=lambda: controller.show_frame(PageAbout))
+        button2.pack(pady=10, padx=10)
 
-        button3 = tk.Button(self, text="Beenden", command=lambda: sys.exit(0))
-        button3.pack()
+        button3 = tk.Button(self, text="Beenden", width=20, command=lambda: sys.exit(0))
+        button3.pack(pady=10, padx=10)
 
 
 # function for call more than one function after button click
@@ -102,53 +116,131 @@ class PageSettings(tk.Frame):
         # defining label OBJECTs
         # adding the label object to the container
         # padding x and y axis
-        labelNote = tk.Label(self, text="Legen Sie einen neuen Schüler an.", font=style.LARGE_FONT)
-        labelNote.grid(row=0, column=2)
+        labelNote = tk.Label(self, text="Legen Sie einen neuen Nutzer an.", font=style.LARGE_FONT)
+        labelNote.grid(row=0, column=0, columnspan=2)
+        labelNote.grid(padx=20, pady=20)
 
         labelFirstname = tk.Label(self, text="Vorname", font=style.MEDIUM_FONT)
-        labelFirstname.grid(row=1, column=2)
+        labelFirstname.grid(row=1, column=0)
         inputFirstname = tk.Entry(self)
-        inputFirstname.grid(row=1, column=3)
+        inputFirstname.grid(row=1, column=1)
+        inputFirstname.grid(pady=10, padx=10)
 
         labelName = tk.Label(self, text="Name", font=style.MEDIUM_FONT)
-        labelName.grid(row=2, column=2)
+        labelName.grid(row=2, column=0)
         inputName = tk.Entry(self)
-        inputName.grid(row=2, column=3)
+        inputName.grid(row=2, column=1)
+        inputName.grid(pady=10, padx=10)
 
         labelPassword = tk.Label(self, text="Passwort", font=style.MEDIUM_FONT)
-        labelPassword.grid(row=3, column=2)
+        labelPassword.grid(row=3, column=0)
         inputPassword= tk.Entry(self)
-        inputPassword.grid(row=3, column=3)
+        inputPassword.grid(row=3, column=1)
+        inputPassword.grid(pady=10, padx=10)
 
         labelClass = tk.Label(self, text="Klasse", font=style.MEDIUM_FONT)
-        labelClass.grid(row=4, column=2)
+        labelClass.grid(row=4, column=0)
         inputClass = tk.Entry(self)
-        inputClass.grid(row=4, column=3)
-
-        button1 = tk.Button(self, text="Anlegen", command=lambda: combine_funcs(controller.show_frame(PageExecuteQuery)))
-        button1.grid(row=999, column=1)
+        inputClass.grid(row=4, column=1)
+        inputClass.grid(pady=10, padx=10)
 
         button2 = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
-        button2.grid(row=999, column=2)
+        button2.grid(row=999, column=0)
+        button2.grid(padx=20, pady=20)
 
+        # when button is clicked, get values from input fields and hand them to the mysql execution
+        button1 = tk.Button(self, text="Anlegen", command=lambda: combine_funcs(executeSql.executeMysqlInsert('user',{'name' : inputName.get(),'firstname' : inputFirstname.get(),'password' : inputPassword.get(),'class' : inputClass.get()}),controller.show_frame(PageMainMenu)))
+        button1.grid(row=999, column=1)
 
-# initialisation of the button dictionary - MUST be set!
-button = [[0 for x in range(999)] for x in range(999)]
-
+##################################################################################################################
+# PROBLEM WITH REFRESHING
+##################################################################################################################
 '''PageShowAll class '''
 class PageShowAll(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
         # calling the executeSql method for showing all data
-        rows = executeSql.executeSqlShow(""" select * from user""")
-        # creating labels for each tupel
-        for row in rows:
-            label = tk.Label(self, text=row, fg="red", justify="left", font=style.SMALL_FONT)
-            label.pack()
+        rows = executeSql.executeMysqlShow('*', 'user')
 
+        labelNote = tk.Label(self, text="Auflistung aller Nutzer", font=style.LARGE_FONT)
+        labelNote.grid(row=0, column=1)
+        labelNote.grid(padx=20, pady=20)
+
+        # button for refreshing the list after inserting new entries
+        buttonRefresh = tk.Button(self, text="Synchronisieren", command=combine_funcs(self.refreshShowAll))
+        buttonRefresh.grid(row=0, column=2)
+
+        # button for going back to the main menu
         buttonBack = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
-        buttonBack.pack()
+        buttonBack.grid(row=0, column=3)
+
+        # labels for user data grid
+        label1 = tk.Label(self, text='Id', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        label1.grid(row=1, column=0)
+        label2 = tk.Label(self, text='Name', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        label2.grid(row=1, column=1)
+        label3 = tk.Label(self, text='Vorname', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        label3.grid(row=1, column=2)
+        label4 = tk.Label(self, text='Passwort', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        label4.grid(row=1, column=3)
+        label5 = tk.Label(self, text='Klasse', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        label5.grid(row=1, column=4)
+
+        # creating labels for each tupel
+        counter = 3
+        for row in rows:
+            if(counter % 2 == 0):
+                label1 = tk.Label(self, text=row[0], fg="red", bg="white", justify="left", font=style.SMALL_FONT)
+                label1.grid(row=counter, column=0)
+                label2 = tk.Label(self, text=row[1], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
+                label2.grid(row=counter, column=1)
+                label3 = tk.Label(self, text=row[2], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
+                label3.grid(row=counter, column=2)
+                label4 = tk.Label(self, text=row[3], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
+                label4.grid(row=counter, column=3)
+                label5 = tk.Label(self, text=row[4], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
+                label5.grid(row=counter, column=4)
+            else:
+                label1 = tk.Label(self, text=row[0], fg="red", justify="left", font=style.SMALL_FONT)
+                label1.grid(row=counter, column=0)
+                label2 = tk.Label(self, text=row[1], fg="black", justify="left", font=style.SMALL_FONT)
+                label2.grid(row=counter, column=1)
+                label3 = tk.Label(self, text=row[2], fg="black", justify="left", font=style.SMALL_FONT)
+                label3.grid(row=counter, column=2)
+                label4 = tk.Label(self, text=row[3], fg="black", justify="left", font=style.SMALL_FONT)
+                label4.grid(row=counter, column=3)
+                label5 = tk.Label(self, text=row[4], fg="black", justify="left", font=style.SMALL_FONT)
+                label5.grid(row=counter, column=4)
+            counter += 1
+
+    # function for refreshing the user data grid
+    def refreshShowAll(self):
+        rows = executeSql.executeMysqlShow('*', 'user')
+        counter = 3
+        for row in rows:
+            if (counter % 2 == 0):
+                label1 = tk.Label(self, text=row[0], fg="red", bg="white", justify="left", font=style.SMALL_FONT)
+                label1.grid(row=counter, column=0)
+                label2 = tk.Label(self, text=row[1], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
+                label2.grid(row=counter, column=1)
+                label3 = tk.Label(self, text=row[2], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
+                label3.grid(row=counter, column=2)
+                label4 = tk.Label(self, text=row[3], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
+                label4.grid(row=counter, column=3)
+                label5 = tk.Label(self, text=row[4], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
+                label5.grid(row=counter, column=4)
+            else:
+                label1 = tk.Label(self, text=row[0], fg="red", justify="left", font=style.SMALL_FONT)
+                label1.grid(row=counter, column=0)
+                label2 = tk.Label(self, text=row[1], fg="black", justify="left", font=style.SMALL_FONT)
+                label2.grid(row=counter, column=1)
+                label3 = tk.Label(self, text=row[2], fg="black", justify="left", font=style.SMALL_FONT)
+                label3.grid(row=counter, column=2)
+                label4 = tk.Label(self, text=row[3], fg="black", justify="left", font=style.SMALL_FONT)
+                label4.grid(row=counter, column=3)
+                label5 = tk.Label(self, text=row[4], fg="black", justify="left", font=style.SMALL_FONT)
+                label5.grid(row=counter, column=4)
+            counter += 1
 
 '''PageExecuteQuery class'''
 class PageExecuteQuery(tk.Frame):
