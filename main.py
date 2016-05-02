@@ -1,12 +1,10 @@
 import sys
 import tkinter as tk
 
+# contains e.g. font styles
+import config.style as style
+# contains the mysql execute methods which open and close db connections for statements
 from projectModules import executeSql
-
-#Defining Font style
-LARGE_FONT = ("Helvetica", 12)
-MEDIUM_FONT = ("Helvetica", 10)
-SMALL_FONT = ("Helvetica", 8)
 
 '''Start class'''
 # initialising class
@@ -67,7 +65,7 @@ class PageMainMenu(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # defining a label OBJECT
-        label = tk.Label(self, text="python-mysql-ad-Tool", font=LARGE_FONT)
+        label = tk.Label(self, text="python-mysql-ad-Tool", font=style.LARGE_FONT)
         # add the label object to the container
         # padding x and y axis
         label.pack(pady=10, padx=10)
@@ -104,26 +102,35 @@ class PageSettings(tk.Frame):
         # defining label OBJECTs
         # adding the label object to the container
         # padding x and y axis
-        labelNote = tk.Label(self, text="Legen Sie einen neuen Schüler an.", font=LARGE_FONT)
-        labelNote.pack(pady=15, padx=10)
+        labelNote = tk.Label(self, text="Legen Sie einen neuen Schüler an.", font=style.LARGE_FONT)
+        labelNote.grid(row=0, column=2)
 
-        labelFirstname = tk.Label(self, text="Vorname", font=MEDIUM_FONT)
-        labelFirstname.pack(pady=15, padx=15)
+        labelFirstname = tk.Label(self, text="Vorname", font=style.MEDIUM_FONT)
+        labelFirstname.grid(row=1, column=2)
+        inputFirstname = tk.Entry(self)
+        inputFirstname.grid(row=1, column=3)
 
-        labelName = tk.Label(self, text="Name", font=MEDIUM_FONT)
-        labelName.pack(pady=20, padx=15)
+        labelName = tk.Label(self, text="Name", font=style.MEDIUM_FONT)
+        labelName.grid(row=2, column=2)
+        inputName = tk.Entry(self)
+        inputName.grid(row=2, column=3)
 
-        labelPassword = tk.Label(self, text="Passwort", font=MEDIUM_FONT)
-        labelPassword.pack(pady=20, padx=15)
+        labelPassword = tk.Label(self, text="Passwort", font=style.MEDIUM_FONT)
+        labelPassword.grid(row=3, column=2)
+        inputPassword= tk.Entry(self)
+        inputPassword.grid(row=3, column=3)
 
-        labelClass = tk.Label(self, text="Klasse", font=MEDIUM_FONT)
-        labelClass.pack(pady=20, padx=15)
+        labelClass = tk.Label(self, text="Klasse", font=style.MEDIUM_FONT)
+        labelClass.grid(row=4, column=2)
+        inputClass = tk.Entry(self)
+        inputClass.grid(row=4, column=3)
 
         button1 = tk.Button(self, text="Anlegen", command=lambda: combine_funcs(controller.show_frame(PageExecuteQuery)))
-        button1.pack()
+        button1.grid(row=999, column=1)
 
         button2 = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
-        button2.pack()
+        button2.grid(row=999, column=2)
+
 
 # initialisation of the button dictionary - MUST be set!
 button = [[0 for x in range(999)] for x in range(999)]
@@ -137,7 +144,7 @@ class PageShowAll(tk.Frame):
         rows = executeSql.executeSqlShow(""" select * from user""")
         # creating labels for each tupel
         for row in rows:
-            label = tk.Label(self, text=row, fg="red", justify="left", font=SMALL_FONT)
+            label = tk.Label(self, text=row, fg="red", justify="left", font=style.SMALL_FONT)
             label.pack()
 
         buttonBack = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
@@ -147,7 +154,7 @@ class PageShowAll(tk.Frame):
 class PageExecuteQuery(tk.Frame):
     def showGrid(self, controller):
         # defining a label OBJECT
-        label = tk.Label(self, text="Hier würde Ausgabe stehen", font=LARGE_FONT)
+        label = tk.Label(self, text="Hier würde Ausgabe stehen", font=style.LARGE_FONT)
         label.grid(row=0, column=0, sticky="s")
 
         # creating a button
@@ -163,21 +170,21 @@ class PageExecuteQuery(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.showGrid(controller)
 
-
 '''PageAbout'''
 class PageAbout(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Über", font=LARGE_FONT)
+        label = tk.Label(self, text="Über", font=style.LARGE_FONT)
         label.pack(pady=10, padx=10)
 
         labelText = tk.Label(self, text="python-mysql-ad\n"
-                                    "Tool um neue user im internen\n"
-                                    "active directory anzulegen\n"
-                                    "", font=MEDIUM_FONT)
+                                        "Tool um neue user im internen\n"
+                                        "active directory anzulegen\n"
+                                        "", font=style.MEDIUM_FONT)
         labelText.pack(pady=10, padx=10)
 
-        labelCopyr = tk.Label(self, text="(c) 2016 - A.Neeven, F.Kaya, D.Lentz, F.Petruschke", font=SMALL_FONT)
+        labelCopyr = tk.Label(self, text="(c) 2016 - A.Neeven, F.Kaya, D.Lentz, F.Petruschke",
+                              font=style.SMALL_FONT)
         labelCopyr.pack(pady=10, padx=10)
 
         button1 = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
