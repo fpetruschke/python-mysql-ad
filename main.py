@@ -6,6 +6,8 @@ import config.style as style
 # contains the mysql execute methods which open and close db connections for statements
 from projectModules import executeSql
 
+import projectModules.importCsv as importCsv
+
 # Method for centering the application window in the center of the screen
 def center(toplevel):
     toplevel.update_idletasks()
@@ -92,6 +94,9 @@ class PageMainMenu(tk.Frame):
 
         button4 = tk.Button(self, text="Alle Nutzer anzeigen", width=20, command=lambda: controller.show_frame(PageShowAll))
         button4.pack(pady=10, padx=10)
+
+        button5 = tk.Button(self, text="csv importieren", width=20, command=lambda: combine_funcs(importCsv.importFromCsv(), controller.show_frame(PageShowAll)))
+        button5.pack(pady=10, padx=10)
 
         button2 = tk.Button(self, text="Über", width=20, command=lambda: controller.show_frame(PageAbout))
         button2.pack(pady=10, padx=10)
@@ -216,14 +221,15 @@ class PageShowAll(tk.Frame):
             button.grid(row=counter, column=5)
             counter += 1"""
 
+    # function for refreshing data from user grid after deleting data
+    def refreshAfterDelete(self, userId):
+        print(userId)
+
     # function for refreshing the user data grid
     def refreshShowAll(self):
         rows = executeSql.executeMysqlShow('*', 'user')
 
         sumOfNewRows = len(rows)
-
-
-
         counter = 3
         for row in rows:
             if (counter % 2 == 0):
@@ -248,9 +254,11 @@ class PageShowAll(tk.Frame):
                 label4.grid(row=counter, column=3)
                 label5 = tk.Label(self, text=row[4], fg="black", justify="left", font=style.SMALL_FONT)
                 label5.grid(row=counter, column=4)
-            button = tk.Button(self, text="X", fg="red", justify="center", font=style.MEDIUM_FONT_BOLD, command=lambda userId=row[0]: executeSql.executeMysqlDelete('user', 'user_id', userId))
+            button = tk.Button(self, text="X", fg="red", justify="center", font=style.MEDIUM_FONT_BOLD, command=lambda userId=row[0]: combine_funcs(executeSql.executeMysqlDelete('user', 'user_id', userId), self.refreshAfterDelete(userId)))
             button.grid(row=counter, column=5)
             counter += 1
+
+
 
 '''PageExecuteQuery class'''
 class PageExecuteQuery(tk.Frame):
