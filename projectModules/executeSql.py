@@ -28,6 +28,7 @@ def executeMysqlShow(stringToSelect, tableName):
     destroy(cursor, db)
     return rows
 
+
 def executeMysqlInsert(tablename, values):
     db = connect()
     cursor = db.cursor()
@@ -36,5 +37,18 @@ def executeMysqlInsert(tablename, values):
 
     cursor.execute(add_user, values)
     # Make sure data is committed to the database
+    db.commit()
+    destroy(cursor, db)
+
+
+def executeMysqlDelete(tablename, column, value):
+    db = connect()
+    cursor = db.cursor()
+
+    # delete statement
+    del_user = "DELETE FROM `"+ tablename +"` WHERE `"+ tablename +"` . `"+ column +"`= " + str(value)
+
+    # execution, commit and destruction of curser and connection
+    cursor.execute(del_user)
     db.commit()
     destroy(cursor, db)

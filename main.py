@@ -159,6 +159,7 @@ class PageSettings(tk.Frame):
 class PageShowAll(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+
         # calling the executeSql method for showing all data
         rows = executeSql.executeMysqlShow('*', 'user')
 
@@ -187,7 +188,7 @@ class PageShowAll(tk.Frame):
         label5.grid(row=1, column=4)
 
         # creating labels for each tupel
-        counter = 3
+        """counter = 3
         for row in rows:
             if(counter % 2 == 0):
                 label1 = tk.Label(self, text=row[0], fg="red", bg="white", justify="left", font=style.SMALL_FONT)
@@ -211,11 +212,18 @@ class PageShowAll(tk.Frame):
                 label4.grid(row=counter, column=3)
                 label5 = tk.Label(self, text=row[4], fg="black", justify="left", font=style.SMALL_FONT)
                 label5.grid(row=counter, column=4)
-            counter += 1
+            button = tk.Button(self, text="X", fg="red", justify="center", font=style.MEDIUM_FONT_BOLD, command=lambda userId=row[0]: executeSql.executeMysqlDelete('user', 'user_id', userId))
+            button.grid(row=counter, column=5)
+            counter += 1"""
 
     # function for refreshing the user data grid
     def refreshShowAll(self):
         rows = executeSql.executeMysqlShow('*', 'user')
+
+        sumOfNewRows = len(rows)
+
+
+
         counter = 3
         for row in rows:
             if (counter % 2 == 0):
@@ -240,6 +248,8 @@ class PageShowAll(tk.Frame):
                 label4.grid(row=counter, column=3)
                 label5 = tk.Label(self, text=row[4], fg="black", justify="left", font=style.SMALL_FONT)
                 label5.grid(row=counter, column=4)
+            button = tk.Button(self, text="X", fg="red", justify="center", font=style.MEDIUM_FONT_BOLD, command=lambda userId=row[0]: executeSql.executeMysqlDelete('user', 'user_id', userId))
+            button.grid(row=counter, column=5)
             counter += 1
 
 '''PageExecuteQuery class'''
