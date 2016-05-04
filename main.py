@@ -178,7 +178,7 @@ class PageShowAll(tk.Frame):
         labelNote.grid(padx=20, pady=20)
 
         # button for refreshing the list after inserting new entries
-        buttonRefresh = tk.Button(self, text="Synchronisieren", command=(self.refreshShowAll(labelrow)))
+        buttonRefresh = tk.Button(self, text="Synchronisieren", command=lambda: self.refreshAfterDelete(labelrow))
         buttonRefresh.grid(row=0, column=2)
 
         # button for going back to the main menu
@@ -197,46 +197,14 @@ class PageShowAll(tk.Frame):
         label5 = tk.Label(self, text='Klasse', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
         label5.grid(row=1, column=4)
 
-        # creating labels for each tupel
-        """counter = 3
-        for row in rows:
-            if(counter % 2 == 0):
-                label1 = tk.Label(self, text=row[0], fg="red", bg="white", justify="left", font=style.SMALL_FONT)
-                label1.grid(row=counter, column=0)
-                label2 = tk.Label(self, text=row[1], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
-                label2.grid(row=counter, column=1)
-                label3 = tk.Label(self, text=row[2], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
-                label3.grid(row=counter, column=2)
-                label4 = tk.Label(self, text=row[3], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
-                label4.grid(row=counter, column=3)
-                label5 = tk.Label(self, text=row[4], fg="black", bg="white", justify="left", font=style.SMALL_FONT)
-                label5.grid(row=counter, column=4)
-            else:
-                label1 = tk.Label(self, text=row[0], fg="red", justify="left", font=style.SMALL_FONT)
-                label1.grid(row=counter, column=0)
-                label2 = tk.Label(self, text=row[1], fg="black", justify="left", font=style.SMALL_FONT)
-                label2.grid(row=counter, column=1)
-                label3 = tk.Label(self, text=row[2], fg="black", justify="left", font=style.SMALL_FONT)
-                label3.grid(row=counter, column=2)
-                label4 = tk.Label(self, text=row[3], fg="black", justify="left", font=style.SMALL_FONT)
-                label4.grid(row=counter, column=3)
-                label5 = tk.Label(self, text=row[4], fg="black", justify="left", font=style.SMALL_FONT)
-                label5.grid(row=counter, column=4)
-            button = tk.Button(self, text="X", fg="red", justify="center", font=style.MEDIUM_FONT_BOLD, command=lambda userId=row[0]: executeSql.executeMysqlDelete('user', 'user_id', userId))
-            button.grid(row=counter, column=5)
-            counter += 1"""
-
-    # function for refreshing data from user grid after deleting data
-    def refreshAfterDelete(self, userId):
-        print(userId)
 
     # function for refreshing the user data grid
     def refreshShowAll(self,labelrow):
         rows = executeSql.executeMysqlShow('*', 'user')
-        labels = []
         sumOfNewRows = len(rows)
         counter = 3
         for row in rows:
+            labels = []
             if (counter % 2 == 0):
                 labels.append(tk.Label(self, text=row[0], fg="red", bg="white", justify="left", font=style.SMALL_FONT))
                 labels[0].grid(row=counter, column=0)
@@ -251,23 +219,25 @@ class PageShowAll(tk.Frame):
             else:
                 labels.append(tk.Label(self, text=row[0], fg="red", justify="left", font=style.SMALL_FONT))
                 labels[0].grid(row=counter, column=0)
-                labels.append(
-                    tk.Label(self, text=row[1], fg="black", justify="left", font=style.SMALL_FONT))
+                labels.append(tk.Label(self, text=row[1], fg="black", justify="left", font=style.SMALL_FONT))
                 labels[1].grid(row=counter, column=1)
-                labels.append(
-                    tk.Label(self, text=row[2], fg="black", justify="left", font=style.SMALL_FONT))
+                labels.append(tk.Label(self, text=row[2], fg="black", justify="left", font=style.SMALL_FONT))
                 labels[2].grid(row=counter, column=2)
-                labels.append(
-                    tk.Label(self, text=row[3], fg="black", justify="left", font=style.SMALL_FONT))
+                labels.append(tk.Label(self, text=row[3], fg="black", justify="left", font=style.SMALL_FONT))
                 labels[3].grid(row=counter, column=3)
-                labels.append(
-                    tk.Label(self, text=row[4], fg="black", justify="left", font=style.SMALL_FONT))
+                labels.append(tk.Label(self, text=row[4], fg="black", justify="left", font=style.SMALL_FONT))
                 labels[4].grid(row=counter, column=4)
-            button = tk.Button(self, text="X", fg="red", justify="center", font=style.MEDIUM_FONT_BOLD, command=lambda userId=row[0]: combine_funcs(executeSql.executeMysqlDelete('user', 'user_id', userId), self.refreshAfterDelete(userId)))
-            button.grid(row=counter, column=5)
+            labels.append(tk.Button(self, text="X", fg="red", justify="center", font=style.MEDIUM_FONT_BOLD, command=lambda userId=row[0]: combine_funcs(executeSql.executeMysqlDelete('user', 'user_id', userId), self.refreshAfterDelete(labelrow))))
+            labels[5].grid(row=counter, column=5)
             labelrow.append(labels)
             counter += 1
+    # function for refreshing data from user grid after deleting data
+    def refreshAfterDelete(self, labelrow):
+        for row in labelrow:
+            for label in row:
+                label.destroy()
 
+        self.refreshShowAll(labelrow)
 
 '''PageExecuteQuery class'''
 class PageExecuteQuery(tk.Frame):
