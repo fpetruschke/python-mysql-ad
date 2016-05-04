@@ -9,14 +9,19 @@ def importFromCsv():
     f = open(filepathstring, 'r') # opens the csv file
     try:
         reader = csv.reader(f)  # creates the reader object
+        # get the number of lines
+        counter = 0
         for row in reader:      # iterates the rows of the file in orders
-            rowDir = {
-                'name' : row[0],
-                'firstname': row[1],
-                'password': row[2],
-                'class': row[3]
-            }
-            executeSql.executeMysqlInsert('user', rowDir)
+            # ignore the firstline which contains the header row
+            if(counter != 0):
+                rowDir = {
+                    'name' : row[0],
+                    'firstname': row[1],
+                    'password': row[2],
+                    'class': row[3]
+                }
+                executeSql.executeMysqlInsert('user', rowDir)
+            counter += 1
     finally:
         f.close()               # closing file reader
 
