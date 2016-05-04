@@ -35,8 +35,8 @@ class Start(tk.Tk):
         tk.Tk.__init__(self,*args,**kwargs)
 
         # setting the windows size
-        tk.Tk.minsize(self, width=500, height=400)
-        tk.Tk.maxsize(self, width=500, height=400)
+        tk.Tk.minsize(self, width=550, height=400)
+        tk.Tk.maxsize(self, width=550, height=400)
 
         # define container as a tk.Frame
         container = tk.Frame(self)
@@ -188,7 +188,7 @@ class PageShowAll(tk.Frame):
         rows = executeSql.executeMysqlShow('*', 'user')
 
         labelNote = tk.Label(self, text="Auflistung aller Nutzer", font=style.LARGE_FONT)
-        labelNote.grid(row=0, column=1)
+        labelNote.grid(row=0, column=0, columnspan=2)
         labelNote.grid(padx=20, pady=20)
 
         # button for refreshing the list after inserting new entries
@@ -200,16 +200,18 @@ class PageShowAll(tk.Frame):
         buttonBack.grid(row=0, column=3)
 
         # labels for user data grid
-        label1 = tk.Label(self, text='Id', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
-        label1.grid(row=1, column=0)
-        label2 = tk.Label(self, text='Name', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
-        label2.grid(row=1, column=1)
-        label3 = tk.Label(self, text='Vorname', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
-        label3.grid(row=1, column=2)
-        label4 = tk.Label(self, text='Passwort', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
-        label4.grid(row=1, column=3)
-        label5 = tk.Label(self, text='Klasse', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
-        label5.grid(row=1, column=4)
+        lblId = tk.Label(self, text='Id', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        lblId.grid(row=1, column=0)
+        lblName = tk.Label(self, text='Name', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        lblName.grid(row=1, column=1)
+        lblFirstname = tk.Label(self, text='Vorname', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        lblFirstname.grid(row=1, column=2)
+        lblUsername = tk.Label(self, text='Username', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        lblUsername.grid(row=1, column=3)
+        lblPassword = tk.Label(self, text='Passwort', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        lblPassword.grid(row=1, column=4)
+        lblClass = tk.Label(self, text='Klasse', fg="black", justify="left", font=style.SMALL_FONT_BOLD)
+        lblClass.grid(row=1, column=5)
 
 
     # function for refreshing the user data grid
@@ -230,6 +232,8 @@ class PageShowAll(tk.Frame):
                 labels[3].grid(row=counter, column=3)
                 labels.append(tk.Label(self, text=row[4], fg="black", bg="white", justify="left", font=style.SMALL_FONT))
                 labels[4].grid(row=counter, column=4)
+                labels.append(tk.Label(self, text=row[5], fg="black", bg="white", justify="left", font=style.SMALL_FONT))
+                labels[5].grid(row=counter, column=5)
             else:
                 labels.append(tk.Label(self, text=row[0], fg="red", justify="left", font=style.SMALL_FONT))
                 labels[0].grid(row=counter, column=0)
@@ -241,8 +245,10 @@ class PageShowAll(tk.Frame):
                 labels[3].grid(row=counter, column=3)
                 labels.append(tk.Label(self, text=row[4], fg="black", justify="left", font=style.SMALL_FONT))
                 labels[4].grid(row=counter, column=4)
+                labels.append(tk.Label(self, text=row[5], fg="black", justify="left", font=style.SMALL_FONT))
+                labels[5].grid(row=counter, column=5)
             labels.append(tk.Button(self, text="X", fg="red", justify="center", font=style.MEDIUM_FONT_BOLD, command=lambda userId=row[0]: combine_funcs(executeSql.executeMysqlDelete('user', 'user_id', userId), self.refreshAfterDelete(labelrow))))
-            labels[5].grid(row=counter, column=5)
+            labels[6].grid(row=counter, column=6)
             labelrow.append(labels)
             counter += 1
     # function for refreshing data from user grid after deleting data
