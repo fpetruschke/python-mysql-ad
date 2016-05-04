@@ -20,7 +20,7 @@ def importFromCsv():
                     'password': row[2],
                     'class': row[3]
                 }
-                executeSql.executeMysqlInsert('user', rowDir)
+                executeSql.executeMysqlInsert('user', rowDir['name'], rowDir['firstname'], rowDir['password'], rowDir['class'])
             counter += 1
     finally:
         f.close()               # closing file reader

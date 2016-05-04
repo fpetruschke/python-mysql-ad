@@ -29,13 +29,23 @@ def executeMysqlShow(stringToSelect, tableName):
     return rows
 
 
-def executeMysqlInsert(tablename, values):
+def executeMysqlInsert(tablename, name, firstname, password, className):
+
+    username = str(className) + "-" + str(name[:4]) + str(firstname[:2])
+    creationDict = {
+        'name' : name,
+        'firstname': firstname,
+        'username' : username,
+        'password': password,
+        'className': className,
+    }
+
     db = connect()
     cursor = db.cursor()
 
-    add_user = ("INSERT INTO "+ tablename + "(name, firstname, password, class) VALUES (%(name)s, %(firstname)s, %(password)s, %(class)s)")
+    add_user = ("INSERT INTO "+ tablename + "(name, firstname, username, password, class) VALUES (%(name)s, %(firstname)s, %(username)s, %(password)s, %(className)s)")
 
-    cursor.execute(add_user, values)
+    cursor.execute(add_user, creationDict)
     # Make sure data is committed to the database
     db.commit()
     destroy(cursor, db)
