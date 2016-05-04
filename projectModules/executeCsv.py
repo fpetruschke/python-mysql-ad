@@ -2,17 +2,10 @@ import csv      # imports the csv module
 from projectModules import executeSql
 from tkinter import filedialog
 
-"""
-###################################################################################
-TEST FOR IMPORTING DATA FROM CSV
-###################################################################################
-
-"""
-
+# function for importing data from csv-file to mysql db
 def importFromCsv():
-    #tk.withdraw() # we don't want a full GUI, so keep the root window from appearing
+    # get users choice for selecting a csv file
     filepathstring = filedialog.askopenfilename()
-
     f = open(filepathstring, 'r') # opens the csv file
     try:
         reader = csv.reader(f)  # creates the reader object
@@ -26,3 +19,14 @@ def importFromCsv():
             executeSql.executeMysqlInsert('user', rowDir)
     finally:
         f.close()               # closing file reader
+
+# function for save all data from mysql db to .csv file
+def exportToCsv():
+    path = filedialog.asksaveasfilename()
+    rows = executeSql.executeMysqlShow('*', 'user')
+    headrow = ['Nutzer-Id', 'Name', 'Vorname', 'Password', 'Klasse']
+    with open(path, "w") as csv_file:
+        writer = csv.writer(csv_file, delimiter=',')
+        writer.writerow(headrow)
+        for row in rows:
+            writer.writerow(row)
