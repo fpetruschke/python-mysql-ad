@@ -6,6 +6,10 @@ Python script to manage Active Directory
 * Running MySql-Server
 * Python 3.x
 * mysql.connector 2.0.4
+* (for linux: install wmic)
+* (for linux: install wmi_client_wrapper)
+* WMI (Windows Manager Interface)
+
 
 # Deployment
 

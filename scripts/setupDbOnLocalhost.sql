@@ -9,6 +9,7 @@
 --      user_id (PK, AI)                                                                    --
 --      name (varchar(255))                                                                 --
 --      firstname (varchar(255))                                                            --
+--      username (varchar(255))                                                             --
 --      password (varchar(255))                                                             --
 --      class (varchar(255))                                                                --
 -- 5. Beispieldaten werden eingefügt                                                        --

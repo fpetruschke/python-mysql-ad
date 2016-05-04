@@ -16,13 +16,25 @@ def destroy(cursor, connection):
     connection.close()
 
 
-# takes a queryString in Format """query"""
+# executes a select statement
 def executeMysqlShow(stringToSelect, tableName):
     db = connect()
     # defining the cursor for reading data
     cursor = db.cursor()
     # query the database
     cursor.execute("""SELECT""" + stringToSelect + """ FROM """ + tableName, )
+    rows = cursor.fetchall()
+    # destroying db connection
+    destroy(cursor, db)
+    return rows
+
+# executes a select statement
+def executeMysqlShowWhere(stringToSelect, tableName, whereCondition):
+    db = connect()
+    # defining the cursor for reading data
+    cursor = db.cursor()
+    # query the database
+    cursor.execute("""SELECT""" + stringToSelect + """ FROM """ + tableName + """ WHERE """ + whereCondition , )
     rows = cursor.fetchall()
     # destroying db connection
     destroy(cursor, db)
