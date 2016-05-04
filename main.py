@@ -5,8 +5,10 @@ import tkinter as tk
 import config.style as style
 # contains the mysql execute methods which open and close db connections for statements
 from projectModules import executeSql
-
+# module for executing csv actions
 import projectModules.executeCsv as executeCsv
+# module for managing the status of checkboxes while creating new user
+import projectModules.checkboxManager as checkboxManager
 
 # Method for centering the application window in the center of the screen
 def center(toplevel):
@@ -53,7 +55,7 @@ class Start(tk.Tk):
         '''PAGES - all pages must be defined inside the F tupel !!!'''
         # dictionary for all the frames
         self.frames = {}
-        for F in (PageMainMenu, PageExecuteQuery, PageShowAll, PageSettings, PageAbout):
+        for F in (PageMainMenu, PageCsvImport, PageShowAll, PageCreateUser, PageAbout):
             # initial page which will be run
             frame = F(container, self)
             self.frames[F] = frame
@@ -89,13 +91,13 @@ class PageMainMenu(tk.Frame):
         # creating a button
         # Parameters: self, title, command/function
         # lambda : run command immediately
-        btnCreate = tk.Button(self, text="Neuen Nutzer anlegen", width=20 ,command=lambda: controller.show_frame(PageSettings))
+        btnCreate = tk.Button(self, text="Neuen Nutzer anlegen", width=20 ,command=lambda: controller.show_frame(PageCreateUser))
         btnCreate.pack(pady=10, padx=10)
 
         btnShowAll = tk.Button(self, text="Alle Nutzer anzeigen", width=20, command=lambda: controller.show_frame(PageShowAll))
         btnShowAll.pack(pady=10, padx=10)
 
-        btnImport = tk.Button(self, text=".csv-Import", width=20, command=lambda: combine_funcs(executeCsv.importFromCsv(), controller.show_frame(PageShowAll)))
+        btnImport = tk.Button(self, text=".csv-Import", width=20, command=lambda: combine_funcs(controller.show_frame(PageCsvImport)))
         btnImport.pack(pady=10, padx=10)
 
         btnExport = tk.Button(self, text=".csv-Export", width=20, command=lambda: executeCsv.exportToCsv())
@@ -117,8 +119,9 @@ def combine_funcs(*funcs):
 
     return combined_func
 
-'''PageSettings class '''
-class PageSettings(tk.Frame):
+
+'''PageCreateUser class '''
+class PageCreateUser(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         # defining label OBJECTs
@@ -152,13 +155,24 @@ class PageSettings(tk.Frame):
         inputClass.grid(row=4, column=1)
         inputClass.grid(pady=10, padx=10)
 
-        button2 = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
-        button2.grid(row=999, column=0)
-        button2.grid(padx=20, pady=20)
+        btnBackToMainMenu = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
+        btnBackToMainMenu.grid(row=999, column=0)
+        btnBackToMainMenu.grid(padx=20, pady=20)
+
+        # checkboxes for choosing method whether to create user into mysql or directly to AD
+        # onlyAd = 1 if box is checked!
+        # onlyAd = 0 if box is unchecked
+        onlyAd = tk.IntVar()
+        checkboxCreateAD = tk.Checkbutton(self, text="NUR im AD anlegen", fg='red', font=style.MEDIUM_FONT_BOLD ,variable=onlyAd)
+        checkboxCreateAD.grid(row=998, column=1)
 
         # when button is clicked, get values from input fields and hand them to the mysql execution
-        button1 = tk.Button(self, text="Anlegen", command=lambda: combine_funcs(executeSql.executeMysqlInsert('user',{'name' : inputName.get(),'firstname' : inputFirstname.get(),'password' : inputPassword.get(),'class' : inputClass.get()}),controller.show_frame(PageMainMenu)))
-        button1.grid(row=999, column=1)
+        btnCreateUser = tk.Button(self, text="Anlegen", command=lambda: combine_funcs(
+            checkboxManager.checkBoxStatus(onlyAd, 'user', inputName.get(),inputFirstname.get(),inputPassword.get(),inputClass.get()),
+            #executeSql.executeMysqlInsert('user',{'name' : inputName.get(),'firstname' : inputFirstname.get(),'password' : inputPassword.get(),'class' : inputClass.get()}),
+            controller.show_frame(PageMainMenu))
+          )
+        btnCreateUser.grid(row=999, column=1)
 
 ##################################################################################################################
 # PROBLEM WITH REFRESHING
@@ -239,21 +253,40 @@ class PageShowAll(tk.Frame):
 
         self.refreshShowAll(labelrow)
 
-'''PageExecuteQuery class'''
-class PageExecuteQuery(tk.Frame):
+'''PageCsvImport class'''
+class PageCsvImport(tk.Frame):
     def showGrid(self, controller):
         # defining a label OBJECT
-        label = tk.Label(self, text="Hier würde Ausgabe stehen", font=style.LARGE_FONT)
-        label.grid(row=0, column=0, sticky="s")
+        lblTitle = tk.Label(self, text="Importieren einer .csv-Datei", font=style.LARGE_FONT_BOLD)
+        lblTitle.grid(row=0, column=1, columnspan=2)
+        lblTitle.grid(padx=10, pady=10)
 
-        # creating a button
-        # Parameters: self, title, command/function
-        # lambda : run command immediately
-        buttonBackToMain = tk.Button(self, text="Hauptmenü", command=lambda: controller.show_frame(PageMainMenu))
-        buttonBackToMain.grid(row=998, column=0, sticky="n")
+        lblDescription1 = tk.Label(self, text="Folgende Formatierung wird erwartet:", justify="left", font=style.SMALL_FONT_BOLD)
+        lblDescription1.grid(row=1, column=1, columnspan=2)
+        lblDescription1.grid(padx=10)
+        lblDescription2 = tk.Label(self, text=" - Head-Zeile mit Spaltennamen", justify="left", font=style.SMALL_FONT_BOLD)
+        lblDescription2.grid(row=2, column=1, columnspan=2)
+        lblDescription2.grid(padx=10)
+        lblDescription3 = tk.Label(self, text=" - Komma-separierte Werte", justify="left", font=style.SMALL_FONT_BOLD)
+        lblDescription3.grid(row=3, column=1, columnspan=2)
+        lblDescription3.grid(padx=10)
+        lblDescription4 = tk.Label(self, text=" - Pro Zeile EIN Datensatz", justify="left", font=style.SMALL_FONT_BOLD)
+        lblDescription4.grid(row=4, column=1, columnspan=2)
+        lblDescription4.grid(padx=10)
 
-        buttonExitGame = tk.Button(self, text="Beenden", command=lambda: sys.exit(0))
-        buttonExitGame.grid(row=999, column=0, sticky="n")
+        btnChooseToImportIntoMysql = tk.Button(self, text="Vollständiger Import", command=lambda: combine_funcs(executeCsv.importFromCsv(),controller.show_frame(PageMainMenu)))
+        btnChooseToImportIntoMysql.grid(row=998, column=1)
+        btnChooseToImportIntoMysql.grid(padx=10, pady=10)
+
+        btnChooseToImportOnlyAD = tk.Button(self, text="Import NUR nach AD", fg='red', command=lambda: combine_funcs(#@toDo: call function for inserting into AD
+                                                                             controller.show_frame(PageMainMenu)))
+        btnChooseToImportOnlyAD.grid(row=998, column=2)
+        btnChooseToImportOnlyAD.grid(padx=10, pady=10)
+
+        # button for going back to the main menu
+        buttonBack = tk.Button(self, text="zurück", width=35, command=lambda: controller.show_frame(PageMainMenu))
+        buttonBack.grid(row=999, column=0, columnspan=3)
+        buttonBack.grid(padx=10, pady=10)
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
