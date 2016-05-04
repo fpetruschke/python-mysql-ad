@@ -19,3 +19,16 @@ The config.py **must** contain following entries:
 * dbUser = '<user who has access to the db>'
 * dbPassword = '<password of the above user>'
 
+
+## CSV-Import
+
+First line of your csv should contain headers!
+Values must be comma seperated!
+
+ToDo: documentation of exact column names and accepted data types
+
+## CSV-Export
+
+You will get all data saved in the mysql database as .csv-file
+
+ToDo: documentation of exact column names
