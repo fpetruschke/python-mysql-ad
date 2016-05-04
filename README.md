@@ -15,13 +15,22 @@ Python script to manage Active Directory
 
 ## Mysql-Configuration
 
-To setup the database connection to the mysql database you can use the config.py
-The config.py **must** contain following entries:
+To setup the database connection to the mysql database you can use the config/mysqlConfig.py
+The mySqlConfig.py **must** contain following entries:
 
 * hostName = '<localhost | IP>'
 * dbName = '<name of your mysql db>'
 * dbUser = '<user who has access to the db>'
 * dbPassword = '<password of the above user>'
+
+## ActiveDirectory-Configuration
+
+To setup the ssh connection to your active directory you need to adjust the "config/adConfig.py".
+The adConfig.py **must** contain following entries:
+
+* server = '<IP>'
+* username = '<login name>'
+* password = '<password of the above user>'
 
 
 ## CSV-Import
