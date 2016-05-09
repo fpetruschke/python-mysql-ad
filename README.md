@@ -23,6 +23,9 @@ Python script to manage Active Directory
 	'dbName' = 'pythonTest'
 	'dbUser' = 'root'
 	'dbPassword' = ''
+1. Get pywin32 **exe** from https://sourceforge.net/projects/pywin32/files/pywin32/Build%20220/ (Get the version: **pywin32-220.win-amd64-py3.4.exe**)
+1. Typ: Etwas übersichtlicher als "IDLE" --> suche nach PythonWin im Startmenü. Über Tools > COM Makepy utility lassen sich Module installieren...
+1. Get WMI **msi installer** !!! https://pypi.python.org/pypi/WMI/#downloads (Download button in the top right corner)
 1. project should be running by now. Start it with cmd:
     **`C:\Python34\python.exe Path\to\Project\main.py`**
 
