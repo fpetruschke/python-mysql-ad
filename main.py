@@ -160,15 +160,15 @@ class PageCreateUser(tk.Frame):
         btnBackToMainMenu.grid(padx=20, pady=20)
 
         # checkboxes for choosing method whether to create user into mysql or directly to AD
-        # onlyAd = 1 if box is checked!
-        # onlyAd = 0 if box is unchecked
-        onlyAd = tk.IntVar()
+        # onlyAd = True if box is checked!
+        # onlyAd = False if box is unchecked
+        onlyAd = tk.BooleanVar()
         checkboxCreateAD = tk.Checkbutton(self, text="NUR im AD anlegen", fg='red', font=style.MEDIUM_FONT_BOLD ,variable=onlyAd)
         checkboxCreateAD.grid(row=998, column=1)
 
         # when button is clicked, get values from input fields and hand them to the mysql execution
         btnCreateUser = tk.Button(self, text="Anlegen", command=lambda: combine_funcs(
-            checkboxManager.checkBoxStatus(onlyAd, 'user', inputName.get(),inputFirstname.get(),inputPassword.get(),inputClass.get()),
+            checkboxManager.checkBoxStatus(onlyAd.get(), 'user', inputName.get(),inputFirstname.get(),inputPassword.get(),inputClass.get()),
             #executeSql.executeMysqlInsert('user',{'name' : inputName.get(),'firstname' : inputFirstname.get(),'password' : inputPassword.get(),'class' : inputClass.get()}),
             controller.show_frame(PageMainMenu))
           )
