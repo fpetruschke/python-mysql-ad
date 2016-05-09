@@ -13,6 +13,19 @@ Python script to manage Active Directory
 
 # Deployment
 
+## Get everything running on school PCs
+
+1. install python 3.4.4 windows **msi installer** !!! from python.org
+1. get the master-branch from **[http://github.com/mysql/mysql-connector-python](http://github.com/mysql/mysql-connector-python)**
+1. open mysql Workbench and insert the sql statements (make sure you have the **username - column** in the table!!!!!!!!! manually add it if not: username, VARCHAR(255))
+1. change the **config for mysql connection** in the project folder under "config" (mysqlConfig) to:
+	'hostname' = 'localhost'
+	'dbName' = 'pythonTest'
+	'dbUser' = 'root'
+	'dbPassword' = ''
+1. project should be running by now. Start it with cmd:
+    **`C:\Python34\python.exe Path\to\Project\main.py`**
+
 ## Mysql-Configuration
 
 To setup the database connection to the mysql database you can use the config/mysqlConfig.py
