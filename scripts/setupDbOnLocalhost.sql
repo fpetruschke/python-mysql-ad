@@ -23,7 +23,7 @@ CREATE USER 'python'@'localhost' IDENTIFIED BY '***';GRANT USAGE ON *.* TO 'pyth
 GRANT ALL PRIVILEGES ON `pythonTest`.* TO 'python'@'localhost';
 CREATE TABLE `pythonTest`.`user` ( `user_id` INT NOT NULL AUTO_INCREMENT COMMENT 'Id of the created user' , `name` VARCHAR(255) NOT NULL COMMENT 'name of the user' , `notes` TEXT NULL COMMENT 'notes concerning the user' , PRIMARY KEY (`user_id`)) ENGINE = InnoDB;
 ALTER TABLE `pythonTest`.`user` ADD `firstname` VARCHAR(255) NOT NULL COMMENT 'firstname of the user' AFTER `name`, ADD `password` VARCHAR(255) DEFAULT 'changeme1' NOT NULL COMMENT 'password of the user' AFTER `firstname`, ADD `class` VARCHAR(255) NOT NULL COMMENT 'class the user belongs to' AFTER `password`;
-ALTER TABLE `user` ADD `username` VARCHAR(255) NOT NULL AFTER `firstname`;
-ALTER TABLE `user` CHANGE `username` `username` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'username consists of classname, first 4 chars of Lastname, first 2 chars of firstname';
+ALTER TABLE `pythonTest`.`user` ADD `username` VARCHAR(255) NOT NULL AFTER `firstname`;
+ALTER TABLE `pythonTest`.`user` CHANGE `username` `username` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'username consists of classname, first 4 chars of Lastname, first 2 chars of firstname';
 INSERT INTO `pythonTest`.`user` (`user_id`, `name`, `firstname`, `username`, `password`, `class`) VALUES (NULL, 'Mustermann', 'Max', 'IT4a-MustMa', '1234', 'IT4a');
 INSERT INTO `pythonTest`.`user` (`user_id`, `name`, `firstname`, `username`, `password`, `class`) VALUES (NULL, 'Ute', 'Mustermann', 'IT4b-MustUt', '1234', 'IT4b');
