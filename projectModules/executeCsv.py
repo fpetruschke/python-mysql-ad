@@ -29,7 +29,7 @@ def importFromCsv():
 def exportToCsv():
     path = filedialog.asksaveasfilename()
     rows = executeSql.executeMysqlShow('*', 'user')
-    headrow = ['Nutzer-Id', 'Name', 'Vorname', 'Password', 'Klasse']
+    headrow = ['Nutzer-Id', 'Name', 'Vorname', 'Nutzername', 'Password', 'Klasse']
     with open(path, "w") as csv_file:
         writer = csv.writer(csv_file, delimiter=',')
         writer.writerow(headrow)

@@ -9,6 +9,12 @@ from projectModules import executeSql
 import projectModules.executeCsv as executeCsv
 # module for managing the status of checkboxes while creating new user
 import projectModules.checkboxManager as checkboxManager
+# get config for page "settings"
+import config.adConfig as adConf
+import config.mysqlConfig as mysqlConf
+# use configManager to save settings
+import projectModules.configManager as configManager
+
 
 # Method for centering the application window in the center of the screen
 def center(toplevel):
@@ -55,7 +61,7 @@ class Start(tk.Tk):
         '''PAGES - all pages must be defined inside the F tupel !!!'''
         # dictionary for all the frames
         self.frames = {}
-        for F in (PageMainMenu, PageCsvImport, PageShowAll, PageCreateUser, PageAbout):
+        for F in (PageMainMenu, PageCsvImport, PageShowAll, PageCreateUser, PageSettings, PageAbout):
             # initial page which will be run
             frame = F(container, self)
             self.frames[F] = frame
@@ -85,29 +91,30 @@ class PageMainMenu(tk.Frame):
         # defining a label OBJECT
         label = tk.Label(self, text="python-mysql-ad-Tool", font=style.LARGE_FONT)
         # add the label object to the container
-        # padding x and y axis
-        label.pack(pady=10, padx=10)
+        label.pack(style.MARGIN10)
 
         # creating a button
         # Parameters: self, title, command/function
-        # lambda : run command immediately
         btnCreate = tk.Button(self, text="Neuen Nutzer anlegen", width=20 ,command=lambda: controller.show_frame(PageCreateUser))
-        btnCreate.pack(pady=10, padx=10)
+        btnCreate.pack(style.MARGIN10)
 
         btnShowAll = tk.Button(self, text="Alle Nutzer anzeigen", width=20, command=lambda: controller.show_frame(PageShowAll))
-        btnShowAll.pack(pady=10, padx=10)
+        btnShowAll.pack(style.MARGIN10)
 
         btnImport = tk.Button(self, text=".csv-Import", width=20, command=lambda: combine_funcs(controller.show_frame(PageCsvImport)))
-        btnImport.pack(pady=10, padx=10)
+        btnImport.pack(style.MARGIN10)
 
         btnExport = tk.Button(self, text=".csv-Export", width=20, command=lambda: executeCsv.exportToCsv())
-        btnExport.pack(pady=10, padx=10)
+        btnExport.pack(style.MARGIN10)
+
+        btnSettings = tk.Button(self, text="Einstellungen", width=20, command=lambda: controller.show_frame(PageSettings))
+        btnSettings.pack(style.MARGIN10)
 
         btnAbout = tk.Button(self, text="Über", width=20, command=lambda: controller.show_frame(PageAbout))
-        btnAbout.pack(pady=10, padx=10)
+        btnAbout.pack(style.MARGIN10)
 
         btnExit = tk.Button(self, text="Beenden", width=20, command=lambda: sys.exit(0))
-        btnExit.pack(pady=10, padx=10)
+        btnExit.pack(style.MARGIN10)
 
 
 # function for call more than one function after button click
@@ -129,35 +136,35 @@ class PageCreateUser(tk.Frame):
         # padding x and y axis
         labelNote = tk.Label(self, text="Legen Sie einen neuen Nutzer an.", font=style.LARGE_FONT)
         labelNote.grid(row=0, column=0, columnspan=2)
-        labelNote.grid(padx=20, pady=20)
+        labelNote.grid(style.MARGIN20)
 
         labelFirstname = tk.Label(self, text="Vorname", font=style.MEDIUM_FONT)
         labelFirstname.grid(row=1, column=0)
         inputFirstname = tk.Entry(self)
         inputFirstname.grid(row=1, column=1)
-        inputFirstname.grid(pady=10, padx=10)
+        inputFirstname.grid(style.MARGIN10)
 
         labelName = tk.Label(self, text="Name", font=style.MEDIUM_FONT)
         labelName.grid(row=2, column=0)
         inputName = tk.Entry(self)
         inputName.grid(row=2, column=1)
-        inputName.grid(pady=10, padx=10)
+        inputName.grid(style.MARGIN10)
 
         labelPassword = tk.Label(self, text="Passwort", font=style.MEDIUM_FONT)
         labelPassword.grid(row=3, column=0)
         inputPassword= tk.Entry(self)
         inputPassword.grid(row=3, column=1)
-        inputPassword.grid(pady=10, padx=10)
+        inputPassword.grid(style.MARGIN10)
 
         labelClass = tk.Label(self, text="Klasse", font=style.MEDIUM_FONT)
         labelClass.grid(row=4, column=0)
         inputClass = tk.Entry(self)
         inputClass.grid(row=4, column=1)
-        inputClass.grid(pady=10, padx=10)
+        inputClass.grid(style.MARGIN10)
 
         btnBackToMainMenu = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
         btnBackToMainMenu.grid(row=999, column=0)
-        btnBackToMainMenu.grid(padx=20, pady=20)
+        btnBackToMainMenu.grid(style.MARGIN20)
 
         # checkboxes for choosing method whether to create user into mysql or directly to AD
         # onlyAd = True if box is checked!
@@ -189,7 +196,7 @@ class PageShowAll(tk.Frame):
 
         labelNote = tk.Label(self, text="Auflistung aller Nutzer", font=style.LARGE_FONT)
         labelNote.grid(row=0, column=0, columnspan=2)
-        labelNote.grid(padx=20, pady=20)
+        labelNote.grid(style.MARGIN20)
 
         # button for refreshing the list after inserting new entries
         buttonRefresh = tk.Button(self, text="Synchronisieren", command=lambda: self.refreshAfterDelete(labelrow))
@@ -265,7 +272,7 @@ class PageCsvImport(tk.Frame):
         # defining a label OBJECT
         lblTitle = tk.Label(self, text="Importieren einer .csv-Datei", font=style.LARGE_FONT_BOLD)
         lblTitle.grid(row=0, column=1, columnspan=2)
-        lblTitle.grid(padx=10, pady=10)
+        lblTitle.grid(style.MARGIN10)
 
         lblDescription1 = tk.Label(self, text="Folgende Formatierung wird erwartet:", justify="left", font=style.SMALL_FONT_BOLD)
         lblDescription1.grid(row=1, column=1, columnspan=2)
@@ -282,38 +289,124 @@ class PageCsvImport(tk.Frame):
 
         btnChooseToImportIntoMysql = tk.Button(self, text="Vollständiger Import", command=lambda: combine_funcs(executeCsv.importFromCsv(),controller.show_frame(PageMainMenu)))
         btnChooseToImportIntoMysql.grid(row=998, column=1)
-        btnChooseToImportIntoMysql.grid(padx=10, pady=10)
+        btnChooseToImportIntoMysql.grid(style.MARGIN10)
 
         btnChooseToImportOnlyAD = tk.Button(self, text="Import NUR nach AD", fg='red', command=lambda: combine_funcs(#@toDo: call function for inserting into AD
                                                                              controller.show_frame(PageMainMenu)))
         btnChooseToImportOnlyAD.grid(row=998, column=2)
-        btnChooseToImportOnlyAD.grid(padx=10, pady=10)
+        btnChooseToImportOnlyAD.grid(style.MARGIN10)
 
         # button for going back to the main menu
         buttonBack = tk.Button(self, text="zurück", width=35, command=lambda: controller.show_frame(PageMainMenu))
         buttonBack.grid(row=999, column=0, columnspan=3)
-        buttonBack.grid(padx=10, pady=10)
+        buttonBack.grid(style.MARGIN10)
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.showGrid(controller)
+
+'''PageSettings'''
+class PageSettings(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Einstellungen", font=style.LARGE_FONT)
+        label.grid(row=0, column=0)
+        label.grid(style.MARGIN10)
+
+        # ACTIVE DIRECTORY
+        labelAD = tk.Label(self, text="ActiveDir.", font=style.MEDIUM_FONT_BOLD)
+        labelAD.grid(row=1, column=0)
+        labelAD.grid(style.MARGIN10)
+
+        labelAdHost = tk.Label(self, text="IP/Hostname: ", font=style.MEDIUM_FONT)
+        labelAdHost.grid(row=2, column=0)
+        inputAdHost = tk.Entry(self)
+        inputAdHost.insert(0, adConf.server)
+        inputAdHost.grid(row=2, column=1, pady=10, padx=10)
+
+        labelAdUsername = tk.Label(self, text="Nutzername: ", font=style.MEDIUM_FONT)
+        labelAdUsername.grid(row=3, column=0)
+        inputAdUsername = tk.Entry(self)
+        inputAdUsername.insert(0, adConf.username)
+        inputAdUsername.grid(row=3, column=1, pady=10, padx=10)
+
+        labelAdUserpwd = tk.Label(self, text="Passwort: ", font=style.MEDIUM_FONT)
+        labelAdUserpwd.grid(row=4, column=0)
+        inputAdUserpwd = tk.Entry(self)
+        inputAdUserpwd.insert(0, adConf.password)
+        inputAdUserpwd.grid(row=4, column=1, pady=10, padx=10)
+
+        # check if config should be written to file - not only be temporary
+        writeConfigToFile = tk.BooleanVar()
+        checkboxWriteConfigToFile = tk.Checkbutton(self, text="dauerhaft Speichern", fg='red',
+                                                   font=style.MEDIUM_FONT_BOLD,
+                                                   variable=writeConfigToFile)
+        checkboxWriteConfigToFile.grid(row=5, column=1)
+
+        # MYSQL
+        labelMysql = tk.Label(self, text="MYSQL", font=style.MEDIUM_FONT_BOLD)
+        labelMysql.grid(row=1, column=2, pady=10, padx=10)
+
+        labelMysqlHost = tk.Label(self, text="IP/Hostname: ", font=style.MEDIUM_FONT)
+        labelMysqlHost.grid(row=2, column=2)
+        inputMysqlHost = tk.Entry(self)
+        inputMysqlHost.insert(0, mysqlConf.hostName)
+        inputMysqlHost.grid(row=2, column=3, pady=10, padx=10)
+
+        labelMysqlDb = tk.Label(self, text="DB-Name: ", font=style.MEDIUM_FONT)
+        labelMysqlDb.grid(row=3, column=2)
+        inputMysqlDb = tk.Entry(self)
+        inputMysqlDb.insert(0, mysqlConf.dbName)
+        inputMysqlDb.grid(row=3, column=3, pady=10, padx=10)
+
+        labelMysqlUser = tk.Label(self, text="DB-Nutzer: ", font=style.MEDIUM_FONT)
+        labelMysqlUser.grid(row=4, column=2)
+        inputMysqlUser = tk.Entry(self)
+        inputMysqlUser.insert(0, mysqlConf.dbUser)
+        inputMysqlUser.grid(row=4, column=3, pady=10, padx=10)
+
+        labelMysqlPwd = tk.Label(self, text="Nutzer-Passwort: ", font=style.MEDIUM_FONT)
+        labelMysqlPwd.grid(row=5, column=2)
+        inputMysqlPwd = tk.Entry(self)
+        inputMysqlPwd.insert(0, mysqlConf.dbPassword)
+        inputMysqlPwd.grid(row=5, column=3, pady=10, padx=10)
+
+        notifySave = "Ist die Checkbox aktiviert, wird die Konfiguration dauerhaft vorgenommen."
+        lblNote = tk.Label(self, text=notifySave, font=style.SMALL_FONT_BOLD)
+        lblNote.grid(row=998, column=0, columnspan=3, pady=10, padx=10)
+
+        btnSave = tk.Button(self, text="Speichern", command=lambda: configManager.setConfig({
+            'writeToFile': writeConfigToFile.get(),
+            'adHost'    : inputAdHost.get(),
+            'adUser'    : inputAdUsername.get(),
+            'adPwd'     : inputAdUserpwd.get(),
+            'mysqlHost' : inputMysqlHost.get(),
+            'mysqlDb'   : inputMysqlDb.get(),
+            'mysqlUser' : inputMysqlUser.get(),
+            'mysqlPwd'  : inputMysqlPwd.get()
+        }))
+        btnSave.grid(row=999, column=1)
+
+        btnBack = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
+        btnBack.grid(row=999, column=0)
+
 
 '''PageAbout'''
 class PageAbout(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Über", font=style.LARGE_FONT)
-        label.pack(pady=10, padx=10)
+        label.pack(style.MARGIN10)
 
         labelText = tk.Label(self, text="python-mysql-ad\n"
                                         "Tool um neue user im internen\n"
                                         "active directory anzulegen\n"
                                         "", font=style.MEDIUM_FONT)
-        labelText.pack(pady=10, padx=10)
+        labelText.pack(style.MARGIN10)
 
         labelCopyr = tk.Label(self, text="(c) 2016 - A.Neeven, F.Kaya, D.Lentz, F.Petruschke",
                               font=style.SMALL_FONT)
-        labelCopyr.pack(pady=10, padx=10)
+        labelCopyr.pack(style.MARGIN10)
 
         button1 = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
         button1.pack()

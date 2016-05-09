@@ -54,10 +54,20 @@ The adConfig.py **must** contain following entries:
 First line of your csv should contain headers!
 Values must be comma seperated!
 
-ToDo: documentation of exact column names and accepted data types
+| row[0],          | row[1],               | row[2],                                  | row[3]                      |
+| ---------------- | --------------------- | ---------------------------------------- | --------------------------- |
+| 'name'           | 'firstname'           | 'password'                               | 'class'                     |
+| Name of the user | Firstname of the user | desired Password of the user - optional. | class the user is linked to |
+
+An example file is attached: `import/testImport.csv`
 
 ## CSV-Export
 
 You will get all data saved in the mysql database as .csv-file
 
-ToDo: documentation of exact column names
+
+| Nutzer-Id	      | Name             | Vorname               | Nutzername           | Password             | Klasse                    |
+| --------------- | ---------------- | --------------------- | -------------------- | -------------------- | ------------------------- |
+| id of the entry | name of the user | firstname of the user | username of the user | password of the user | class the user belongs to |
+
+An example file is attached: `export/testExport.csv`
