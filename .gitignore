@@ -4,3 +4,5 @@
 *.iml
 out
 gen
+config/adConfig.py
+config/mysqlConfig.py

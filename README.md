@@ -26,6 +26,7 @@ Python script to manage Active Directory
 1. Get pywin32 **exe** from https://sourceforge.net/projects/pywin32/files/pywin32/Build%20220/ (Get the version: **pywin32-220.win-amd64-py3.4.exe**)
 1. Get WMI: `C:\Python34\Scripts\easy_install.exe wmi`
 1. Check the installed modules: `C:\Python34\Scripts\pip3.4.exe list` - Module, die installiert sein müssen: mysql-connector-python<2.0.4>, pip, pywin32<220>, wmi<1.4.9>
+1. If not existent, create files `config/adConfig.py`, `config/mysqlConfig.py` and **copy content from the example configs** into these files.
 1. project should be running by now. Start it with cmd:
     **`C:\Python34\python.exe Path\to\Project\main.py`**
 
@@ -39,6 +40,8 @@ The mySqlConfig.py **must** contain following entries:
 * dbUser = '<user who has access to the db>'
 * dbPassword = '<password of the above user>'
 
+**You can copy the contents of `config/mysqlConfig.example.py`.**
+
 ## ActiveDirectory-Configuration
 
 To setup the ssh connection to your active directory you need to adjust the "config/adConfig.py".
@@ -48,6 +51,7 @@ The adConfig.py **must** contain following entries:
 * username = '<login name>'
 * password = '<password of the above user>'
 
+**You can copy the contents of `config/adConfig.example.py`**
 
 ## CSV-Import
 

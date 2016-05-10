@@ -375,7 +375,7 @@ class PageSettings(tk.Frame):
         lblNote = tk.Label(self, text=notifySave, font=style.SMALL_FONT_BOLD)
         lblNote.grid(row=998, column=0, columnspan=3, pady=10, padx=10)
 
-        btnSave = tk.Button(self, text="Speichern", command=lambda: configManager.setConfig({
+        btnSave = tk.Button(self, text="Speichern", command=lambda: combine_funcs(configManager.setConfig({
             'writeToFile': writeConfigToFile.get(),
             'adHost'    : inputAdHost.get(),
             'adUser'    : inputAdUsername.get(),
@@ -384,7 +384,7 @@ class PageSettings(tk.Frame):
             'mysqlDb'   : inputMysqlDb.get(),
             'mysqlUser' : inputMysqlUser.get(),
             'mysqlPwd'  : inputMysqlPwd.get()
-        }))
+        }), controller.show_frame(PageMainMenu)))
         btnSave.grid(row=999, column=1)
 
         btnBack = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
