@@ -44,8 +44,8 @@ class Start(tk.Tk):
         tk.Tk.__init__(self,*args,**kwargs)
 
         # setting the windows size
-        tk.Tk.minsize(self, width=550, height=400)
-        tk.Tk.maxsize(self, width=550, height=400)
+        tk.Tk.minsize(self, width=580, height=400)
+        tk.Tk.maxsize(self, width=580, height=400)
 
         # define container as a tk.Frame
         container = tk.Frame(self)
@@ -404,9 +404,9 @@ class PageSettings(tk.Frame):
         inputMysqlPwd.insert(0, mysqlConf.dbPassword)
         inputMysqlPwd.grid(row=5, column=3, pady=10, padx=10)
 
-        notifySave = "Ist die Checkbox aktiviert, wird die Konfiguration dauerhaft vorgenommen."
+        notifySave = "Ist die Checkbox aktiviert, wird die Konfiguration nach einem Neustart dauerhaft vorgenommen."
         lblNote = tk.Label(self, text=notifySave, font=style.SMALL_FONT_BOLD)
-        lblNote.grid(row=998, column=0, columnspan=3, pady=10, padx=10)
+        lblNote.grid(row=998, column=0, columnspan=4, pady=10, padx=10)
 
         btnSave = tk.Button(self, text="Speichern", command=lambda: combine_funcs(configManager.setConfig({
             'writeToFile': writeConfigToFile.get(),

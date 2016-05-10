@@ -1,4 +1,4 @@
-hostName = '10.18.1.234'
-dbName = 'pythontest'
+hostName = 'localhost'
+dbName = 'pythonTest'
 dbUser = 'python'
 dbPassword = 'python'
