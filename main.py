@@ -1,5 +1,6 @@
 import sys
 import tkinter as tk
+import re
 
 # contains e.g. font styles
 import config.style as style
@@ -14,6 +15,8 @@ import config.adConfig as adConf
 import config.mysqlConfig as mysqlConf
 # use configManager to save settings
 import projectModules.configManager as configManager
+# use inputValidation module
+import projectModules.inputValidation as validator
 
 
 # Method for centering the application window in the center of the screen
@@ -162,7 +165,7 @@ class PageCreateUser(tk.Frame):
         inputClass.grid(row=4, column=1)
         inputClass.grid(style.MARGIN10)
 
-        btnBackToMainMenu = tk.Button(self, text="zurück", command=lambda: controller.show_frame(PageMainMenu))
+        btnBackToMainMenu = tk.Button(self, text="zurück", command=lambda: combine_funcs(controller.show_frame(PageMainMenu)))
         btnBackToMainMenu.grid(row=999, column=0)
         btnBackToMainMenu.grid(style.MARGIN20)
 
@@ -175,11 +178,41 @@ class PageCreateUser(tk.Frame):
 
         # when button is clicked, get values from input fields and hand them to the mysql execution
         btnCreateUser = tk.Button(self, text="Anlegen", command=lambda: combine_funcs(
-            checkboxManager.checkBoxStatus(onlyAd.get(), 'user', inputName.get(),inputFirstname.get(),inputPassword.get(),inputClass.get()),
-            #executeSql.executeMysqlInsert('user',{'name' : inputName.get(),'firstname' : inputFirstname.get(),'password' : inputPassword.get(),'class' : inputClass.get()}),
-            controller.show_frame(PageMainMenu))
-          )
+            checkIfValid(labelNote, controller, onlyAd.get(),inputName.get(), inputFirstname.get(), inputPassword.get(), inputClass.get())
+          ))
         btnCreateUser.grid(row=999, column=1)
+
+def checkIfValid(labelNote, controller, onlyAd, inputName, inputFirstname, inputPassword, inputClass):
+
+    validName = validator.validateIfEmpty(inputName)
+    validFirstname = validator.validateIfEmpty(inputFirstname)
+    validPassword = validator.validateIfEmpty(inputPassword)
+    validClass = validator.validateIfEmpty(inputClass)
+    emptyInputs = [validName, validFirstname, validPassword, validClass].count(False)
+    if emptyInputs > 0:
+        noteText = "Eingabe ungültig! \n Es müssen alle Felder ausgefüllt werde."
+        labelNote.config(text=noteText, fg="red", font=style.SMALL_FONT_BOLD)
+        labelNote.grid(row=0, column=0, columnspan=2)
+        labelNote.grid(style.MARGIN20)
+    else:
+        result = validator.validatePassword(inputPassword)
+        if result:
+            checkboxManager.checkBoxStatus(onlyAd, 'user', inputName, inputFirstname, inputPassword, inputClass),
+            # executeSql.executeMysqlInsert('user',{'name' : inputName.get(),'firstname' : inputFirstname.get(),'password' : inputPassword.get(),'class' : inputClass.get()}),
+
+            noteText = "Nutzer erfolgreich angelegt."
+            labelNote.config(text=noteText, fg="green", font=style.LARGE_FONT_BOLD)
+            labelNote.grid(row=0, column=0, columnspan=2)
+            labelNote.grid(style.MARGIN20)
+
+            # optional: go back to main menu
+            #controller.show_frame(PageMainMenu)
+        else:
+            noteText="Passwort ungültig! \n min. 7 Zeichen, min. 1 Großbuchstabe, min. 1 Zahl"
+            labelNote.config(text=noteText, fg="red", font=style.SMALL_FONT_BOLD)
+            labelNote.grid(row=0, column=0, columnspan=2)
+            labelNote.grid(style.MARGIN20)
+
 
 ##################################################################################################################
 # PROBLEM WITH REFRESHING
