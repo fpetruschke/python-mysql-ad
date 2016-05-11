@@ -43,7 +43,7 @@ def executeMysqlShowWhere(stringToSelect, tableName, whereCondition):
 
 def executeMysqlInsert(tablename, name, firstname, password, className):
 
-    username = str(className) + "-" + str(name[:4]) + str(firstname[:2])
+    username = str(className[:3]) + "-" + str(name[:4]) + str(firstname[:2])
     creationDict = {
         'name' : name,
         'firstname': firstname,

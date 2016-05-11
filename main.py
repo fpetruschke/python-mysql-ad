@@ -11,6 +11,7 @@ import pages.csvImportPage as csvImport
 import pages.showAllPage as showAll
 import pages.createUserPage as createUser
 import pages.mainMenuPage as mainMenu
+import pages.unitTestsPage as unitTests
 
 
 '''Start class'''
@@ -27,8 +28,8 @@ class Start(tk.Tk):
         tk.Tk.__init__(self,*args,**kwargs)
 
         # setting the windows size
-        tk.Tk.minsize(self, width=580, height=400)
-        tk.Tk.maxsize(self, width=580, height=400)
+        tk.Tk.minsize(self, width=580, height=480)
+        tk.Tk.maxsize(self, width=580, height=480)
 
         # define container as a tk.Frame
         container = tk.Frame(self)
@@ -47,7 +48,7 @@ class Start(tk.Tk):
         '''PAGES - all pages must be defined inside the F tupel !!!'''
         # dictionary for all the frames
         self.frames = {}
-        for F in (PageMainMenu, PageCsvImport, PageShowAll, PageCreateUser, PageSettings, PageAbout):
+        for F in (PageMainMenu, PageCsvImport, PageShowAll, PageCreateUser, PageSettings, PageUnitTests, PageAbout):
             # initial page which will be run
             frame = F(container, self)
             self.frames[F] = frame
@@ -73,7 +74,7 @@ class PageMainMenu(tk.Frame):
     # parent: main class
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        mainMenu.show(self, tk, controller, PageCreateUser, PageShowAll, PageCsvImport, PageSettings, PageAbout)
+        mainMenu.show(self, tk, controller, PageCreateUser, PageShowAll, PageCsvImport, PageSettings, PageUnitTests, PageAbout)
 
 
 '''PageCreateUser class '''
@@ -103,6 +104,11 @@ class PageSettings(tk.Frame):
         tk.Frame.__init__(self, parent)
         settings.show(self, tk, controller, PageMainMenu)
 
+'''PageUnitTests'''
+class PageUnitTests(tk.Frame):
+    def __init__(self,parent, controller):
+        tk.Frame.__init__(self,parent)
+        unitTests.show(self, tk, controller, PageMainMenu)
 
 '''PageAbout'''
 class PageAbout(tk.Frame):

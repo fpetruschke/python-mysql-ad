@@ -8,7 +8,7 @@ import projectModules.combineFunctions as combine
 import projectModules.executeCsv as executeCsv
 
 
-def show(self, tk, controller, PageCreateUser, PageShowAll, PageCsvImport, PageSettings, PageAbout):
+def show(self, tk, controller, PageCreateUser, PageShowAll, PageCsvImport, PageSettings, PageTests, PageAbout):
     # defining a label OBJECT
     label = tk.Label(self, text="python-mysql-ad-Tool", font=style.LARGE_FONT)
     # add the label object to the container
@@ -33,6 +33,9 @@ def show(self, tk, controller, PageCreateUser, PageShowAll, PageCsvImport, PageS
 
     btnSettings = tk.Button(self, text="Einstellungen", width=20, command=lambda: controller.show_frame(PageSettings))
     btnSettings.pack(style.MARGIN10)
+
+    btnTests = tk.Button(self, text="Unit-Tests", width=20, command=lambda: controller.show_frame(PageTests))
+    btnTests.pack(style.MARGIN10)
 
     btnAbout = tk.Button(self, text="Über", width=20, command=lambda: controller.show_frame(PageAbout))
     btnAbout.pack(style.MARGIN10)

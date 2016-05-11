@@ -9,7 +9,8 @@ Tests if the validator module works properly
 class TestsProjectModulesInputValidation(unittest.TestCase):
 
     def getValidPwd(self):
-        return 'ValidPwd1'
+        #return 'ValidPwd1'
+        return '123'
 
     def getInvalidPwd(self):
         return '123'
