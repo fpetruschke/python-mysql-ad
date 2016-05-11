@@ -1,6 +1,4 @@
 Nutzer-Id,Name,Vorname,Nutzername,Password,Klasse
-26,Mustermann,Max,IT4a-MustMa,1234,IT4a
-27,Ute,Mustermann,IT4b-MustUt,1234,IT4b
-28,Griffin,Peter,1234-GrifPe,IT4A-GrifPe,1234
-29,Waalkes,Otto,1234-WaalOt,IT4A-WaalOt,1234
-30,Bürgen,Jürgen,1324-BürgJü,IT4A-JuerBu,1324
+1,Mustermann,Max,IT4a-MustMa,1234,IT4a,
+2,Ute,Mustermann,IT4b-MustUt,1234,IT4b,
+3,Blum,Uschi,IT4a-BlumUs,PeterPan1000,IT4a,

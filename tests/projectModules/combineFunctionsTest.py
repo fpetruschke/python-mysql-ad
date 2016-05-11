@@ -2,6 +2,11 @@ import unittest
 
 import projectModules.combineFunctions as combine
 
+"""
+TestsProjectModulesCombineFunctions
+Tests if the combine_funcs can handle more than one function.
+Combine_funcs came up since tkinter button can only handle one command by default.
+"""
 class TestsProjectModulesCombineFunctions(unittest.TestCase):
     def function1(self):
         x = 10

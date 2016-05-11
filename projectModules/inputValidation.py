@@ -1,13 +1,13 @@
 import re
 
+# checks if given pwd matches the password policies for active directory
 def validatePassword(pwd):
-    # ([A-Z])\w{7,}[0-9]+
-    # OLD: ([a-z]*|[A-Z]*|[0-9]*|.{7,34})
     if re.match("^([A-Z])\w{7,}[0-9]+$", pwd):
         return True
     else:
         return False
 
+# checks if a given input is empty
 def validateIfEmpty(input):
     if input == "":
         return False

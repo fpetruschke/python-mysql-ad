@@ -79,6 +79,13 @@ An example file is attached: `export/testExport.csv`
 # Tests
 
 Unit tests are located inside the `tests`-directory.
-To run unit tests you can execute:
+* Create additional tests into the according test-directory-structure.
+* Also register your additional test into *"testmodules"* of the `tests/testsuiteTest`.
+
+To run the **testsuite** you can execute (*make sure you insert all test paths inside that script when creating new tests!*):
+
+`python3 -m unittest tests/testsuiteTest.py`
+
+To **run single** unit tests you can execute:
 
 `python3 -m unittest tests/path/to/specific/test.py`
