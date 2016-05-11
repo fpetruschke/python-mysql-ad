@@ -4,6 +4,8 @@ import config.style as style
 import projectModules.combineFunctions as combine
 # importing sql manager
 import projectModules.executeSql as executeSql
+import projectModules.adPython as adPython
+import config.adConfig as adConf
 
 
 def show(self, tk, controller,PageMainMenu):
@@ -41,6 +43,7 @@ def show(self, tk, controller,PageMainMenu):
 
 # function for refreshing the user data grid
 def refreshShowAll(self, tk, labelrow):
+    adobj = adPython.AdPython(adConf.server,adConf.username,adConf.password)
     rows = executeSql.executeMysqlShow('*', 'user')
     sumOfNewRows = len(rows)
     counter = 3
@@ -73,13 +76,15 @@ def refreshShowAll(self, tk, labelrow):
             labels.append(tk.Label(self, text=row[5], fg="black", justify="left", font=style.SMALL_FONT))
             labels[5].grid(row=counter, column=5)
         labels.append(tk.Button(self, text="X", fg="red", justify="center", font=style.MEDIUM_FONT_BOLD,
-                                command=lambda userId=row[0]: combine.combine_funcs(
-                                    executeSql.executeMysqlDelete('user', 'user_id', userId),
-                                    refreshAfterDelete(self, tk, labelrow))))
+                                command=lambda tmprow=row: combine.combine_funcs(
+                                    executeSql.executeMysqlDelete('user', 'user_id', tmprow[0]),
+                                    refreshAfterDelete(self, tk, labelrow),
+                                    adobj.deleteUser(tmprow[3]))))
         labels[6].grid(row=counter, column=6)
         labelrow.append(labels)
         counter += 1
 
+    adobj.syncsql(rows)
 
 # function for refreshing data from user grid after deleting data
 def refreshAfterDelete(self, tk, labelrow):
