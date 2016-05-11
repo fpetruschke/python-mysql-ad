@@ -75,3 +75,10 @@ You will get all data saved in the mysql database as .csv-file
 | id of the entry | name of the user | firstname of the user | username of the user | password of the user | class the user belongs to |
 
 An example file is attached: `export/testExport.csv`
+
+# Tests
+
+Unit tests are located inside the `tests`-directory.
+To run unit tests you can execute:
+
+`python3 -m unittest tests/path/to/specific/test.py`
