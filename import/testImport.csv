@@ -1,4 +1,4 @@
 name,firstname,username,password,class
-Griffin,Peter,IT4A-GrifPe,1234,IT4A
-Waalkes,Otto,IT4A-WaalOt,1234,IT4A
-Bürgen,Jürgen,IT4A-JuerBu,1324,IT4A
+Griffin,Peter,IT4A-GrifPe,TestPwd1,IT4A
+Waalkes,Otto,IT4A-WaalOt,TestPwd2,IT4A
+Bürgen,Jürgen,IT4A-JuerBu,TestPwd3,IT4A
