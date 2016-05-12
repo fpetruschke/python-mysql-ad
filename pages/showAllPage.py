@@ -84,7 +84,7 @@ def refreshShowAll(self, tk, labelrow):
         labelrow.append(labels)
         counter += 1
 
-    adobj.syncsql(rows)
+    adobj.syncsql(rows,True)
 
 # function for refreshing data from user grid after deleting data
 def refreshAfterDelete(self, tk, labelrow):

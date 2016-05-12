@@ -1,17 +1,47 @@
 from ldap3 import *
-from projectModules import distinctName
-from config import adConfig
+import config.adConfig as adC
+
 
 class AdPython:
-    def __init__(self, ip, user, password, struct = ['Users','ferdi','baba']):
-        self.distinctName = distinctName.DistinctName(struct)
-        self.stdpath = self.distinctName.makeDN()
+    def __init__(self, ip, user, password, dict=adC.dict):
+        #pass general OU structure
+        self.stddict = dict
+
+        #initiate connection to AD, needs Administrator User in default container Users
         server = Server(ip, get_info=ALL)
-        self.conn = Connection(server, 'cn=' + user + ',cn=Users,dc=ferdi,dc=baba', password, auto_bind=True)
+        self.conn = Connection(server, 'cn=' + user + ',cn=Users,'+self.makeDN(1), password, auto_bind=True)
         self.handleResult()
 
-    def searchUser(self,username='*'):
-        self.conn.search(search_base='dc=ferdi,dc=baba',
+        self.__initOU()
+
+    # initiate general OU structure as passed in parameter dict
+    # doesn't delete unused general OUs
+    def __initOU(self):
+        print(self.stddict)
+        counter = 2
+        while(counter <= len(self.stddict)-1):
+            #only create OU if not already existing
+            if(self.searchOU(self.stddict[counter]) == []):
+                print(self.conn.entries)
+                print('initial create '+self.makeDN(counter))
+                self.conn.add(self.makeDN(counter),['organizationalUnit'],{'description':self.stddict[counter]})
+                self.handleResult()
+            counter += 1
+
+    #check if OU is empty and return bool
+    #needs complete dn
+    def ouEmpty(self,path):
+        self.conn.search(search_base= path,
+                         search_filter='(objectClass=*)',
+                         search_scope=LEVEL)
+        if(self.conn.entries == []):
+            return True
+        else:
+            return False
+
+    #search for user in AD and return dn if distinct
+    def searchUser(self,username='*',step=1):
+        self.conn.search(search_base=self.makeDN(step),
                          search_filter='(cn='+username+')',
                          search_scope=SUBTREE)
         self.handleResult()
@@ -20,25 +50,37 @@ class AdPython:
         else:
             return self.conn.entries[0]._dn
 
+    #search for OU in AD and return dn if distinct
     def searchOU(self,name='*'):
-        self.conn.search(search_base= 'dc=ferdi,dc=baba',search_filter='(name ='+ name + ')')
+        self.conn.search(search_base= self.makeDN(1),search_filter='(name ='+ name + ')')
         self.handleResult()
         if (len(self.conn.entries) > 1 or self.conn.entries == []):
             return self.conn.entries
         else:
             return self.conn.entries[0]._dn
 
+    #create new OU
+    #just usable for specific classes i.e. IT4a
     def addOU(self,name):
+        print(name)
         path = self.searchOU(name[:2])
         self.conn.add('ou=' + name + ',' + path,['organizationalUnit'],{'description':name})
         self.handleResult()
 
+    #creates User under OU and populate info
+    #OU needs to exist
     def addUser(self,username,firstname,surname,password,ou):
-        #self.distinctName.addou(ou)
         path = self.searchOU(ou)
-        self.conn.add('cn=' + username + ',' + path,['user'],{'displayName':firstname+' '+surname, 'givenName':firstname,'sn':surname,'userpassword':password})
+        self.conn.add('cn=' + username + ',' + path,['user'],{
+            'displayName':firstname+' '+surname,
+            'givenName':firstname,
+            'sn':surname,
+            'userpassword':password,
+            'homeDirectory': "home/"+username})
         self.handleResult()
 
+    #copy user to new OU and delete in old OU
+    #not to be used to modify user info
     def modifyUser(self,username,newou):
         oldPath = self.searchUser(username)
 
@@ -47,52 +89,97 @@ class AdPython:
         self.conn.modify_dn(oldPath, 'CN=' + username, delete_old_dn=True, new_superior=newPath)
         self.handleResult()
 
-    def deleteOU(self,name):
-        path = self.searchOU()
-        self.conn.delete(path)
-        self.handleResult()
+    #delete empty OUs after the general OU struct
+    #doesn't delete OUs existent in stddict
+    def deleteEmptyOU(self):
+        self.conn.search(search_base=self.makeDN(len(self.stddict) - 1),
+                         search_filter='(objectClass=*)',
+                         search_scope=LEVEL)
+        #iterate over all OUs after stddict
+        for item in self.conn.entries:
+            #check if empty and delete
+            if(self.ouEmpty(item._dn)):
+                print('delete '+item._dn)
+                self.conn.delete(item._dn)
+                self.handleResult()
+            else:
+                print('keep '+item._dn)
 
+    #delete user specified in parameter username
     def deleteUser(self,username):
         path = self.searchUser(username)
         self.conn.delete(path)
         print('User '+username+' deleted')
         self.handleResult()
 
+    #handle the result of connection actions
+    #prints if not success
     def handleResult(self):
         if (self.conn.result['description'] != 'success'):
             print(self.conn.result)
 
-    def syncsql(self,list):
+    #create dn from stddict with depth of num
+    def makeDN(self,num):
+        dn = ''
+        counter = num
+        while (counter >= 0):
+            if(counter != num):
+                dn += ','
+            if(counter == 0 or counter == 1):
+                dn += 'dc='
+            else:
+                dn += 'ou='
+            dn =  dn + self.stddict[counter]
+            counter -= 1
+        return dn
+
+    #logic for syncing tupels from GUI, db or csv with AD
+    #creates OUs Users and deletes OUs if empty
+    def syncsql(self,list,flg_sql=False):
         for row in list:
             if(self.searchUser(row[3]) == []):
-                print('User nicht vorhanden')
+                print('User '+row[3]+' nicht vorhanden')
+
                 if(self.searchOU(row[5]) == []):
-                    print('OU nicht vorhanden')
+                    print('OU '+row[5]+' nicht vorhanden')
                     self.addOU(row[5])
                     print('OU ' + row[5] + ' angelegt')
                 else:
-                    print('OU vorhanden')
+                    print('OU '+row[5]+' vorhanden')
+
                 self.addUser(row[3],row[2],row[1],row[4],row[5])
                 print('User '+row[3]+' added')
             else:
-                print('User vorhanden')
+                print('User '+row[3]+' vorhanden')
+
                 if (self.searchOU(row[5]) == []):
-                    print('OU nicht vorhanden')
+                    print('OU ' + row[5] + ' nicht vorhanden')
                     self.addOU(row[5])
                     print('OU '+row[5]+' angelegt')
                 else:
-                    print('OU vorhanden')
+                    print('OU ' + row[5] + ' vorhanden')
+
                 self.modifyUser(row[3],row[5])
                 print('User '+row[3]+' moved')
 
+        if(flg_sql):
+            #delete Users not existent in SQL
+            #only execute when sql-flag is set
+            self.searchUser(step=5)
+            for item in self.conn.entries:
+                delete = True
+                testeduser = item._dn[3:13]
+                for row in list:
+                    if(testeduser == row[3]):
+                        delete = False
+                if(delete):
+                    self.deleteUser(testeduser)
+
+        #delete empty OUs after sync actions
+        self.deleteEmptyOU()
 
 
-#adobj = AdPython(adConfig.server,adConfig.username,adConfig.password,['IT','Klassen','Schueler','Benutzer','ferdi','baba'])
- # #adobj.addUser('IT4-popopo','Po','Tato','1234!ASS','IT4a')
- #adobj.deleteOU('IT4a')
- # adobj.deleteUser('IT4-popopo')
- #
-# print(adobj.searchUser('IT4-lentda'))
-#ou = adobj.searchOU('IT4b')
-#print(ou)
-#adobj.modifyUser('IT4a-MustMa','IT4n')
+#adobj = AdPython(adC.server,adC.username,adC.password)
+
+#adobj.searchUser(step=5)
+#print(adobj.conn.entries)

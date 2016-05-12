@@ -32,7 +32,7 @@ def show(self, tk, controller,PageMainMenu):
     btnChooseToImportIntoMysql.grid(style.MARGIN10)
 
     btnChooseToImportOnlyAD = tk.Button(self, text="Import NUR nach AD", fg='red',
-                                        command=lambda: combine.combine_funcs(  # @toDo: call function for inserting into AD
+                                        command=lambda: combine.combine_funcs(executeCsv.importToAD(),
                                             controller.show_frame(PageMainMenu)))
     btnChooseToImportOnlyAD.grid(row=998, column=2)
     btnChooseToImportOnlyAD.grid(style.MARGIN10)

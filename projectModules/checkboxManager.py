@@ -14,7 +14,7 @@ def checkBoxStatus(oneIfOnlyAD, tablename, username, userfirstname, userpassword
         rows = executeSql.executeMysqlShowWhere('*',tablename,tablename+'.username = "' +mergeduser+'"' )
         if(len(rows)==0):
             executeSql.executeMysqlInsert(tablename, username, userfirstname, userpassword, userclass)
-            adobj.syncsql([('0', username, userfirstname, mergeduser, userpassword, userclass)])
+            adobj.syncsql([('0', username, userfirstname, mergeduser, userpassword, userclass)],False)
         else:
             print('User schon vorhanden')
     else:
