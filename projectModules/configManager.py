@@ -15,6 +15,8 @@ def setConfig(configureDict):
         adConf.server   = dict['adHost']
         adConf.username = dict['adUser']
         adConf.password = dict['adPwd']
+        adConf.domain1 = dict['adDomain1']
+        adConf.domain2 = dict['adDomain2']
         # setting mysql config
         mysqlConf.hostName  = dict['mysqlHost']
         mysqlConf.dbName    = dict['mysqlDb']
@@ -48,4 +50,11 @@ def overrideAdConfigFile(dict):
     target.write("\n")
     target.write("password = '" + dict['adPwd'] + "'")
     target.write("\n")
+    target.write("#needed for initial build of general OU structure")
+    target.write("\n")
+    target.write("domain1 = '" + dict['adDomain1'] + "'")
+    target.write("\n")
+    target.write("domain2 = '" + dict['adDomain2'] + "'")
+    target.write("\n")
+    target.write("dict = [domain2, domain1, 'Benutzer','Schueler','Klassen','IT']")
     target.close()

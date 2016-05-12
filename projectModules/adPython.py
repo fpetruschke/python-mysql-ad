@@ -17,12 +17,10 @@ class AdPython:
     # initiate general OU structure as passed in parameter dict
     # doesn't delete unused general OUs
     def __initOU(self):
-        print(self.stddict)
         counter = 2
         while(counter <= len(self.stddict)-1):
             #only create OU if not already existing
             if(self.searchOU(self.stddict[counter]) == []):
-                print(self.conn.entries)
                 print('initial create '+self.makeDN(counter))
                 self.conn.add(self.makeDN(counter),['organizationalUnit'],{'description':self.stddict[counter]})
                 self.handleResult()
@@ -62,7 +60,6 @@ class AdPython:
     #create new OU
     #just usable for specific classes i.e. IT4a
     def addOU(self,name):
-        print(name)
         path = self.searchOU(name[:2])
         self.conn.add('ou=' + name + ',' + path,['organizationalUnit'],{'description':name})
         self.handleResult()
@@ -102,8 +99,6 @@ class AdPython:
                 print('delete '+item._dn)
                 self.conn.delete(item._dn)
                 self.handleResult()
-            else:
-                print('keep '+item._dn)
 
     #delete user specified in parameter username
     def deleteUser(self,username):
@@ -138,26 +133,26 @@ class AdPython:
     def syncsql(self,list,flg_sql=False):
         for row in list:
             if(self.searchUser(row[3]) == []):
-                print('User '+row[3]+' nicht vorhanden')
+                print('User '+row[3]+' not existent')
 
                 if(self.searchOU(row[5]) == []):
-                    print('OU '+row[5]+' nicht vorhanden')
+                    print('OU '+row[5]+' not existent')
                     self.addOU(row[5])
-                    print('OU ' + row[5] + ' angelegt')
+                    print('OU ' + row[5] + ' created')
                 else:
-                    print('OU '+row[5]+' vorhanden')
+                    print('OU '+row[5]+' existent')
 
                 self.addUser(row[3],row[2],row[1],row[4],row[5])
                 print('User '+row[3]+' added')
             else:
-                print('User '+row[3]+' vorhanden')
+                print('User '+row[3]+' existent')
 
                 if (self.searchOU(row[5]) == []):
-                    print('OU ' + row[5] + ' nicht vorhanden')
+                    print('OU ' + row[5] + ' not existent')
                     self.addOU(row[5])
-                    print('OU '+row[5]+' angelegt')
+                    print('OU '+row[5]+' created')
                 else:
-                    print('OU ' + row[5] + ' vorhanden')
+                    print('OU ' + row[5] + ' existent')
 
                 self.modifyUser(row[3],row[5])
                 print('User '+row[3]+' moved')
@@ -177,9 +172,3 @@ class AdPython:
 
         #delete empty OUs after sync actions
         self.deleteEmptyOU()
-
-
-#adobj = AdPython(adC.server,adC.username,adC.password)
-
-#adobj.searchUser(step=5)
-#print(adobj.conn.entries)
