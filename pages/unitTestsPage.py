@@ -1,6 +1,4 @@
-import sys
 import subprocess
-import shlex
 import config.style as style
 import os
 

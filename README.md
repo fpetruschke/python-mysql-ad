@@ -7,7 +7,6 @@ Python script to manage Active Directory
 * Python 3.x
 * mysql.connector 2.0.4
 * pwin32
-* WMI (Windows Manager Interface)
 * ldap3
 
 # Deployment
@@ -23,9 +22,8 @@ Python script to manage Active Directory
 	'dbUser' = 'root'
 	'dbPassword' = ''
 1. Get pywin32 **exe** from https://sourceforge.net/projects/pywin32/files/pywin32/Build%20220/ (Get the version: **pywin32-220.win-amd64-py3.4.exe**)
-1. Get WMI: `C:\Python34\Scripts\easy_install.exe wmi`
 1. Install ldap3! `pip3 install ldap3`
-1. Check the installed modules: `C:\Python34\Scripts\pip3.4.exe list` - Module, die installiert sein müssen: mysql-connector-python<2.0.4>, pip, pywin32<220>, wmi<1.4.9>, ldap3
+1. Check the installed modules: `C:\Python34\Scripts\pip3.4.exe list` - Module, die installiert sein müssen: mysql-connector-python<2.0.4>, pip, pywin32<220>, ldap3
 1. If not existent, create files `config/adConfig.py`, `config/mysqlConfig.py` and **copy content from the example configs** into these files.
 1. project should be running by now. Start it with cmd:
     **`C:\Python34\python.exe Path\to\Project\main.py`**
