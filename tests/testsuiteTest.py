@@ -8,6 +8,9 @@ Tests must be inserted into "testmodules"!
 
 testmodules = [
     'tests.config.styleTest',
+    'tests.config.mysqlTest',
+    'tests.config.adTest',
+    'tests.pages.allPagesExistentTest',
     'tests.projectModules.combineFunctionsTest',
     'tests.projectModules.configManagerTest',
     'tests.projectModules.inputValidationTest',
