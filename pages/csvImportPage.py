@@ -5,8 +5,19 @@ import projectModules.combineFunctions as combine
 # csv manager
 import projectModules.executeCsv as executeCsv
 
-def show(self, tk, controller,PageMainMenu):
-    # defining a label OBJECT
+
+def show(self, tk, controller, PageMainMenu):
+    """
+    show - csvImportPage
+
+    Contains all elements of the csvImportPage.
+    Lets you import a csv-file into MySql master table and active directory or just the active directory
+
+    :param tk: parent tkinter object
+    :param controller: controller object
+    :param PageMainMenu: PageMainMenu for switching pages
+    :return: does not return a value but is responsible for displaying the pages' content
+    """
     lblTitle = tk.Label(self, text="Importieren einer .csv-Datei", font=style.LARGE_FONT_BOLD)
     lblTitle.grid(row=0, column=1, columnspan=2)
     lblTitle.grid(style.MARGIN10)

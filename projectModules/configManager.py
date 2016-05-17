@@ -9,6 +9,17 @@ import config.mysqlConfig as mysqlConf
 # adConfig:     'adHost', 'adUser', 'adPwd'
 # mysqlConfig:  'mysqlHost', 'mysqlDb', 'mysqlUser', 'mysqlPwd'
 def setConfig(configureDict):
+    """
+    setConfig
+
+    Sets the given configuration as temporary configuration if dict['writeToFile'] is False -
+    that will be deleted after restarting the program!
+    If it's True, it will call the methods for overwriting the existing congiguration.
+    Will be refreshed AFTER RESTARTING the program!
+
+    :param configureDict: dictionary containing the new configuration
+    :return: does not return a value but calls the mentioned functions
+    """
     dict = configureDict
     if(False==dict['writeToFile']):
         # setting ad config

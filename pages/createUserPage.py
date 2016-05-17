@@ -9,6 +9,17 @@ import projectModules.inputValidation as validator
 
 
 def show(self, tk, controller,PageMainMenu):
+    """
+    show - createUserPage
+
+    Contains all elements of the createUserPage.
+    This page contains a form for insert new user into the MySQL master table and the active directory or just the ad.
+
+    :param tk: parent tkinter object
+    :param controller: controller object
+    :param PageMainMenu: PageMainMenu for switching pages
+    :return: does not return a value but is responsible for displaying the pages' content
+    """
     labelNote = tk.Label(self, text="Legen Sie einen neuen Nutzer an.", font=style.LARGE_FONT)
     labelNote.grid(row=0, column=0, columnspan=2)
     labelNote.grid(style.MARGIN20)
@@ -52,13 +63,26 @@ def show(self, tk, controller,PageMainMenu):
 
     # when button is clicked, get values from input fields and hand them to the mysql execution
     btnCreateUser = tk.Button(self, text="Anlegen", command=lambda: combine.combine_funcs(
-        checkIfValid(labelNote, controller, onlyAd.get(), inputName.get(), inputFirstname.get(), inputPassword.get(),
+        checkIfValid(labelNote, onlyAd.get(), inputName.get(), inputFirstname.get(), inputPassword.get(),
                      inputClass.get())
     ))
     btnCreateUser.grid(row=999, column=1)
 
 
-def checkIfValid(labelNote, controller, onlyAd, inputName, inputFirstname, inputPassword, inputClass):
+def checkIfValid(labelNote, onlyAd, inputName, inputFirstname, inputPassword, inputClass):
+    """
+    checkIfValid
+
+    Checks if the user input for creating a new user entry is valid
+
+    :param labelNote: Label will be set after button "save" is clicked and will display status
+    :param onlyAd: stands for the checkbox state True or False - if checked, data should only be inserted into AD
+    :param inputName: the name of the new user
+    :param inputFirstname: the firstname of the new user
+    :param inputPassword: the entered password for the new user
+    :param inputClass: the class the new user belongs to
+    :return: method will not return a value but be responsible for displaying the current status of the last request
+    """
     validName = validator.validateIfEmpty(inputName)
     validFirstname = validator.validateIfEmpty(inputFirstname)
     validPassword = validator.validateIfEmpty(inputPassword)

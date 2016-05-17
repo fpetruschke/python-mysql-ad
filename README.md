@@ -1,10 +1,16 @@
 # python-mysql-ad
 Python script to manage Active Directory
 
+The program lets you add user to a MySQL database table and/or an active directory.
+You can create new user, view all existing users from the database inside a datagrid,
+import user data from a .csv-file, export all the data from the MySQL database table
+into a .csv-file and have a look at the written unit tests - better: the results of their testsuite.
+
 # Requirements
 
 * Running MySql-Server
-* Python 3.x
+* Running acitve directory
+* Python >= 3.4.4
 * mysql.connector 2.0.4
 * pwin32
 * ldap3

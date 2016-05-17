@@ -1,10 +1,8 @@
-# import tkinter for gui
+# importing tkinter for gui
 import tkinter as tk
-
-# import script for centering the gui on the display
+# importing script for centering the gui on the display
 import projectModules.positionAppOnDisplay as positionAppOnDisplay
-
-# import pages
+# importing all pages and giving them alias
 import pages.aboutPage as about
 import pages.settingsPage as settings
 import pages.csvImportPage as csvImport
@@ -24,7 +22,7 @@ class Start(tk.Tk):
     # **kwargs: keyword arguments --> e.g. dictionaries
     def __init__(self,*args, **kwargs):
 
-        # call the init again
+        # call the init
         tk.Tk.__init__(self,*args,**kwargs)
 
         # setting the windows size
@@ -76,6 +74,13 @@ class PageMainMenu(tk.Frame):
         tk.Frame.__init__(self, parent)
         mainMenu.show(self, tk, controller, PageCreateUser, PageShowAll, PageCsvImport, PageSettings, PageUnitTests, PageAbout)
 
+"""
+IMPORTANT - PLEASE NOTE:
+All pages must be registered inside the PageMainMenu-class and the "F" dictionary for all the frames in the Start-class!!!
+After that each registered page MUST have it's own callable class.
+For reference see below:
+
+"""
 
 '''PageCreateUser class '''
 class PageCreateUser(tk.Frame):

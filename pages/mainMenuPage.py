@@ -9,23 +9,32 @@ import projectModules.executeCsv as executeCsv
 
 
 def show(self, tk, controller, PageCreateUser, PageShowAll, PageCsvImport, PageSettings, PageTests, PageAbout):
-    # defining a label OBJECT
+    """
+    show - mainMenuPage
+
+    Contains all elements of the mainMenuPage.
+    In the main menu you can choose between the different pages.
+
+    :param tk: parent tkinter object
+    :param controller: controller object
+    :param PageCreateUser: page for creating new user
+    :param PageShowAll: page for showing all entries inside the master MySQL table
+    :param PageCsvImport: page for importing csv-files
+    :param PageSettings: page for configuring the connections
+    :param PageTests: page for displaying the unit tests
+    :param PageAbout: page for displaying the static about text
+    :return: does not return a value but is responsible for displaying the pages' content
+    """
     label = tk.Label(self, text="python-mysql-ad-Tool", font=style.LARGE_FONT)
-    # add the label object to the container
     label.pack(style.MARGIN10)
 
-    # creating a button
-    # Parameters: self, title, command/function
-    btnCreate = tk.Button(self, text="Neuen Nutzer anlegen", width=20,
-                          command=lambda: controller.show_frame(PageCreateUser))
+    btnCreate = tk.Button(self, text="Neuen Nutzer anlegen", width=20,command=lambda: controller.show_frame(PageCreateUser))
     btnCreate.pack(style.MARGIN10)
 
-    btnShowAll = tk.Button(self, text="Alle Nutzer anzeigen", width=20,
-                           command=lambda: controller.show_frame(PageShowAll))
+    btnShowAll = tk.Button(self, text="Alle Nutzer anzeigen", width=20, command=lambda: controller.show_frame(PageShowAll))
     btnShowAll.pack(style.MARGIN10)
 
-    btnImport = tk.Button(self, text=".csv-Import", width=20,
-                          command=lambda: combine.combine_funcs(controller.show_frame(PageCsvImport)))
+    btnImport = tk.Button(self, text=".csv-Import", width=20, command=lambda: combine.combine_funcs(controller.show_frame(PageCsvImport)))
     btnImport.pack(style.MARGIN10)
 
     btnExport = tk.Button(self, text=".csv-Export", width=20, command=lambda: executeCsv.exportToCsv())

@@ -9,6 +9,17 @@ import projectModules.combineFunctions as combine
 import projectModules.configManager as configManager
 
 def show(self, tk, controller,PageMainMenu):
+    """
+    show - settingsPage
+
+    Contains all elements of the settingsPage.
+    Lets you set the connection settings to mysql server and active directory host.
+
+    :param tk: parent tkinter object
+    :param controller: controller object
+    :param PageMainMenu: PageMainMenu for switching pages
+    :return: does not return a value but is responsible for displaying the pages' content
+    """
     label = tk.Label(self, text="Einstellungen", font=style.LARGE_FONT)
     label.grid(row=0, column=0, columnspan=6)
     label.grid(style.MARGIN10)
@@ -88,6 +99,8 @@ def show(self, tk, controller,PageMainMenu):
     lblNote = tk.Label(self, text=notifySave, font=style.SMALL_FONT_BOLD)
     lblNote.grid(row=7, column=0, columnspan=6, pady=10, padx=10)
 
+    # btnSave is responsible to get all the input values into the configManager which will either store the setting
+    # temporary or overwrite the existing config file
     btnSave = tk.Button(self, text="Speichern", command=lambda: combine.combine_funcs(configManager.setConfig({
         'writeToFile': writeConfigToFile.get(),
         'adHost': inputAdHost.get(),

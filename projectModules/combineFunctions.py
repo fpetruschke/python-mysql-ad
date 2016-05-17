@@ -1,6 +1,12 @@
-# function for call more than one function after tkinter button click
-# add to the button: command=combie_funcs(funtion1, function2)
 def combine_funcs(*funcs):
+    """
+    combine_funcs
+
+    Functionality for registering more than one command on a tkinter button click event.
+
+    :param funcs: different, comma separeted functions
+    :return: returns the combined functions
+    """
     def combined_func(*args, **kwargs):
         for f in funcs:
             f(*args, **kwargs)

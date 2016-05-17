@@ -1,5 +1,12 @@
-# Method for centering the application window in the center of the screen
 def center(toplevel):
+    """
+    center
+
+    Positions the given object (application window) to the center of the display.
+
+    :param toplevel: object for relation
+    :return: no return
+    """
     toplevel.update_idletasks()
     w = toplevel.winfo_screenwidth()
     h = toplevel.winfo_screenheight()

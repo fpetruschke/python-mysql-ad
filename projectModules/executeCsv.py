@@ -1,11 +1,24 @@
-import csv      # imports the csv module
+# importing the csv module
+import csv
+# importing the module for executing sql statements
 from projectModules import executeSql
+# importing the filedialog module from tkinter for choosing a directory/file
 from tkinter import filedialog
+# importing the active directory configuration
 import config.adConfig as adC
+# importing the active directory module for executing belonging processes
 import projectModules.adPython as adP
 
 # function for importing data from csv-file to mysql db
 def importFromCsv():
+    """
+    importFromCsv
+
+    Opens a file chooser dialog and read the given csv line by line.
+    Executes a full import into MySQL master and active directory.
+
+    :return: does not return a value
+    """
     adobj = adP.AdPython(adC.server, adC.username, adC.password)
     # get users choice for selecting a csv file
     filepathstring = filedialog.askopenfilename()
@@ -31,7 +44,16 @@ def importFromCsv():
     finally:
         f.close()               # closing file reader
 
+
 def importToAD():
+    """
+    importToAd
+
+    This method will open a file chooser dialog and read the given csv line by line.
+    It will execute a "AD-only" import.
+
+    :return: no return value
+    """
     adobj = adP.AdPython(adC.server, adC.username, adC.password)
     # get users choice for selecting a csv file
     filepathstring = filedialog.askopenfilename()
@@ -55,8 +77,15 @@ def importToAD():
     finally:
         f.close()               # closing file reader
 
-# function for save all data from mysql db to .csv file
+
 def exportToCsv():
+    """
+    exportToCsv
+
+    Will open a directory chooser dialog for exporting the MySQL master table data to.
+
+    :return: no return value but .csv-file creation
+    """
     path = filedialog.asksaveasfilename()
     rows = executeSql.executeMysqlShow('*', 'user')
     headrow = ['Nutzer-Id', 'Name', 'Vorname', 'Nutzername', 'Password', 'Klasse']

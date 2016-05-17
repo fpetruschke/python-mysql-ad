@@ -9,6 +9,17 @@ import config.adConfig as adConf
 
 
 def show(self, tk, controller,PageMainMenu):
+    """
+    show - showAllPage
+
+    Contains all elements of the showAllPage.
+    Is responsible for showing the content of the mysql master table in a data grid.
+
+    :param tk: parent tkinter object
+    :param controller: controller object
+    :param PageMainMenu: PageMainMenu for switching pages
+    :return: does not return a value but is responsible for displaying the pages' content
+    """
     labelrow = []
 
     # calling the executeSql method for showing all data
@@ -41,8 +52,14 @@ def show(self, tk, controller,PageMainMenu):
     lblClass.grid(row=1, column=5)
 
 
-# function for refreshing the user data grid
 def refreshShowAll(self, tk, labelrow):
+    """
+    refreshShowAll
+
+    :param tk: parent tkinter object
+    :param labelrow: the list of labels to display
+    :return: doesn't actually hava a return value but is responsible for showing the grid with the current mysql data
+    """
     adobj = adPython.AdPython(adConf.server,adConf.username,adConf.password)
     rows = executeSql.executeMysqlShow('*', 'user')
     sumOfNewRows = len(rows)
@@ -86,8 +103,15 @@ def refreshShowAll(self, tk, labelrow):
 
     adobj.syncsql(rows,True)
 
-# function for refreshing data from user grid after deleting data
+
 def refreshAfterDelete(self, tk, labelrow):
+    """
+    refreshAfterDelete
+
+    :param tk: parent tkinter object
+    :param labelrow: list of all existing rows
+    :return: function does not return a value but is responsible for calling the refreshShowAll function
+    """
     for row in labelrow:
         for label in row:
             label.destroy()
